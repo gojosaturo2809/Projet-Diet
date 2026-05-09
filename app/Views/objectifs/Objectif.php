@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NutriPlan — Choisir mon objectif</title>
+    <title>NutriPlan - Choisir mon objectif</title>
     <style>
         body{font-family:Arial,sans-serif;background:#f5f5f3;margin:0;color:#1a1917}
         .wrap{max-width:960px;margin:0 auto;padding:32px 20px}
         .hero{background:#c0392b;color:#fff;border-radius:24px;padding:28px;margin-bottom:20px}
         .hero h1{margin:0 0 8px;font-size:2rem}
         .hero p{margin:0;opacity:.9}
-        .msg{padding:12px 14px;border-radius:10px;margin-bottom:16px}
+        .msg{padding:12px 14px;border-radius:12px;margin-bottom:16px}
         .msg.err{background:#fef0ef;color:#922b21;border-left:4px solid #c0392b}
         .msg.ok{background:#eafaf1;color:#1e8449;border-left:4px solid #2ecc71}
         .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
@@ -23,15 +23,17 @@
         .btn{border:none;border-radius:12px;padding:12px 18px;cursor:pointer;font-weight:700}
         .btn.primary{background:#c0392b;color:#fff}
         .btn.primary:hover{background:#922b21}
-        .btn.light{background:#e8e6e1;color:#1a1917}
         .current{background:#ebf5fb;border-left:4px solid #2e86c1;border-radius:12px;padding:14px 16px;margin-bottom:16px}
         .current strong{display:block;margin-bottom:4px}
+        .step-badge{display:inline-flex;align-items:center;gap:8px;background:#fff;color:#c0392b;border-radius:999px;padding:8px 14px;font-weight:700;margin-bottom:14px}
+        .step-badge span{background:#c0392b;color:#fff;width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center}
         @media (max-width: 840px){.grid{grid-template-columns:1fr}.actions{flex-direction:column;align-items:stretch}}
     </style>
 </head>
 <body>
     <div class="wrap">
         <div class="hero">
+            <div class="step-badge"><span>3</span> Étape 3 / 3</div>
             <h1>Choisissez votre objectif</h1>
             <p>Cette étape termine l'inscription. Le choix est enregistré en base et dans la session.</p>
         </div>

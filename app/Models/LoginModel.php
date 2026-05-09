@@ -1,12 +1,12 @@
-<?php 
+<?php
+
 namespace App\Models;
 
 use CodeIgniter\Model;
 
-class LoginModel extends Model{
-
+class LoginModel extends Model
+{
     protected $table = 'utilisateur';
-
     protected $primaryKey = 'id';
     protected $allowedFields = ['email', 'mot_de_passe'];
 
@@ -26,21 +26,22 @@ class LoginModel extends Model{
         ],
     ];
 
-
     public function authenticate($email, $password)
     {
-        // Recherche l'utilisateur par email
         $user = $this->where('email', $email)->first();
-        
-        if (!$user) {
-            return false; // Email n'existe pas
+
+        if (! $user) {
+            return false;
         }
 
-        // Vérifie le mot de passe (supposant qu'il n'est pas hashé pour l'instant)
-        if ($user['mot_de_passe'] === $password) {
-            return $user; // Retourne les données utilisateur
+        if (password_verify((string) $password, (string) $user['mot_de_passe'])) {
+            return $user;
         }
 
-        return false; // Mot de passe incorrect
+        if ((string) $user['mot_de_passe'] === (string) $password) {
+            return $user;
+        }
+
+        return false;
     }
 }
