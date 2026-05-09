@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NutriPlan â€” Design Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="public/css/preview.css">
+</head>
+<body>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• LOGIN â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<div id="tab-login" class="tab-panel active">
+    <div class="auth-layout">
+        <div class="al">
+            <div class="al-inner">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:2.5rem;">
+                    <span style="color:rgba(255,255,255,.7);font-size:1.1rem">âœ¦</span>
+                    <span style="font-family:var(--font-d);font-size:1.4rem;font-weight:700">NutriPlan</span>
+                </div>
+                <div class="bt">Votre corps,<br>votre programme.</div>
+                <p style="opacity:.85;font-size:.95rem;line-height:1.7;margin-bottom:2.5rem">DÃ©couvrez un rÃ©gime alimentaire personnalisÃ© selon vos objectifs. Calculez votre IMC et transformez votre quotidien.</p>
+                <div style="display:flex;gap:2rem">
+                    <div><div style="font-family:var(--font-d);font-size:1.7rem;font-weight:700">500+</div><div style="font-size:.78rem;opacity:.75">Utilisateurs</div></div>
+                    <div><div style="font-family:var(--font-d);font-size:1.7rem;font-weight:700">5</div><div style="font-size:.78rem;opacity:.75">RÃ©gimes</div></div>
+                    <div><div style="font-family:var(--font-d);font-size:1.7rem;font-weight:700">15%</div><div style="font-size:.78rem;opacity:.75">Remise Gold</div></div>
+                </div>
+            </div>
+        </div>
+        <div class="ar">
+            <div class="ab">
+                <h2>Bon retour âœ¦</h2>
+                <p>Connectez-vous Ã  votre compte NutriPlan</p>
+                <div class="alert adang">Email ou mot de passe incorrect.</div>
+                <div class="fg"><label class="fl">Adresse email</label><input type="email" class="fc" placeholder="vous@exemple.com"></div>
+                <div class="fg"><label class="fl">Mot de passe</label><input type="password" class="fc" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"></div>
+                <div style="display:flex;justify-content:flex-end;margin:-.5rem 0 1rem"><a href="#" style="font-size:.8rem;color:var(--red-600)">Mot de passe oubliÃ© ?</a></div>
+                <button class="btn bp bfull blg">Se connecter</button>
+                <div class="dv"></div>
+                <p style="text-align:center;font-size:.85rem;color:var(--dark-500)">Pas encore de compte ? <a href="#" style="color:var(--red-600);font-weight:500" onclick="showTab('register');return false">CrÃ©er un compte</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• INSCRIPTION â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<div id="tab-register" class="tab-panel">
+    <div class="ar" style="min-height:calc(100vh - 56px);background:var(--dark-100)">
+        <div style="width:100%;max-width:540px;margin:2.5rem auto">
+            <!-- Steps -->
+            <div class="steps">
+                <div class="step done">
+                    <div class="sd">âœ“</div>
+                    <div class="sk">Informations</div>
+                </div>
+                <div class="sline" style="background:var(--red-600)"></div>
+                <div class="step act">
+                    <div class="sd">2</div>
+                    <div class="sk">SantÃ©</div>
+                </div>
+                <div class="sline"></div>
+                <div class="step">
+                    <div class="sd">3</div>
+                    <div class="sk">Objectifs</div>
+                </div>
+            </div>
+
+            <!-- Ã‰tape 2 : Informations de santÃ© -->
+            <div class="card">
+                <div class="ch">
+                    <span class="ct">Informations de santÃ©</span>
+                    <span class="tmu">Ã‰tape 2 / 3</span>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+                    <div class="fg"><label class="fl">Taille (cm) <span style="color:var(--red-600)">*</span></label><input type="number" class="fc" placeholder="170"></div>
+                    <div class="fg"><label class="fl">Poids (kg) <span style="color:var(--red-600)">*</span></label><input type="number" class="fc" placeholder="65"></div>
+                </div>
+                <!-- IMC preview -->
+                <div style="background:var(--red-50);border:1.5px solid var(--red-200);border-radius:var(--r-md);padding:1.25rem;margin-bottom:1.25rem">
+                    <div style="font-size:.78rem;color:var(--red-800);font-weight:600;margin-bottom:4px">IMC CALCULÃ‰</div>
+                    <div style="font-family:var(--font-d);font-size:2.4rem;font-weight:700;color:var(--red-600)">22.5</div>
+                    <div style="font-size:.88rem;color:var(--red-800)">Poids normal â€” Excellent !</div>
+                </div>
+                <div class="fw" style="justify-content:space-between">
+                    <button class="btn bg_">â† Retour</button>
+                    <button class="btn bp">Continuer â†’</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• DASHBOARD USER â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<div id="tab-dashboard" class="tab-panel">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nb-brand"><span class="bi">âœ¦</span>Nutri<span class="ba">Plan</span></div>
+        <ul class="nb-nav">
+            <li><span class="nl a">Tableau de bord</span></li>
+            <li><span class="nl">RÃ©gimes</span></li>
+            <li><span class="nl">ActivitÃ©s</span></li>
+            <li><span class="nl">Mon Profil</span></li>
+        </ul>
+        <div class="nb-right">
+            <div class="wb"><span style="color:var(--red-600)">â—ˆ</span><span>12 500 Ar</span></div>
+            <span class="gb">âœ¦ GOLD</span>
+            <div class="ua">JR</div>
+            <button class="btn-lo">DÃ©connexion</button>
+        </div>
+    </nav>
+
+    <div style="max-width:1100px;margin:0 auto;padding:2.5rem 2rem">
+        <div class="mb2">
+            <div class="pl">Espace personnel</div>
+            <h1 style="font-family:var(--font-d);font-size:1.9rem;font-weight:700">Bonjour, Jean ðŸ‘‹</h1>
+            <p class="tmu">Voici un rÃ©sumÃ© de votre programme santÃ©.</p>
+        </div>
+
+        <div class="g2 mb2">
+            <!-- IMC Card -->
+            <div class="imc">
+                <div class="il">Votre IMC actuel</div>
+                <div class="iv">22.5</div>
+                <div class="ic">Poids normal</div>
+                <div class="isc">
+                    <div style="background:#5DADE2"></div>
+                    <div style="background:#2ECC71;position:relative"><div style="position:absolute;top:-6px;right:-4px;width:12px;height:12px;background:white;border-radius:50%;border:2px solid var(--red-200)"></div></div>
+                    <div style="background:#F39C12"></div>
+                    <div style="background:#E74C3C"></div>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:.7rem;opacity:.75">
+                    <span>Maigreur</span><span>Normal âœ“</span><span>Surpoids</span><span>ObÃ©sitÃ©</span>
+                </div>
+            </div>
+            <!-- Wallet + infos -->
+            <div style="display:flex;flex-direction:column;gap:1rem">
+                <div class="g2" style="gap:1rem">
+                    <div class="sc"><div class="sv">70 kg</div><div class="sl">Poids actuel</div></div>
+                    <div class="sc"><div class="sv">175 cm</div><div class="sl">Taille</div></div>
+                </div>
+                <div class="card" style="flex:1">
+                    <div class="ch"><span class="ct">Portefeuille</span><button class="btn bg_ bsm">+ Recharger</button></div>
+                    <div style="font-family:var(--font-d);font-size:1.85rem;font-weight:700;color:var(--red-600)">12 500 Ar</div>
+                    <div class="tmu mt1">Entrez un code de recharge pour ajouter des fonds</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RÃ©gime actif -->
+        <div class="card mb2">
+            <div class="ch">
+                <span class="ct">Mon rÃ©gime actif</span>
+                <div class="fw"><button class="btn bo bsm">â¬‡ PDF</button><button class="btn bp bsm">Changer</button></div>
+            </div>
+            <div class="g2" style="align-items:center">
+                <div>
+                    <div style="font-family:var(--font-d);font-size:1.3rem;font-weight:700;margin-bottom:3px">RÃ©gime MÃ©diterranÃ©en</div>
+                    <div class="tmu">DurÃ©e : 8 semaines â€” RÃ©duction de poids</div>
+                    <div class="fw mt1">
+                        <div class="mp"><div class="mv">30%</div><div class="ml">Viande</div></div>
+                        <div class="mp"><div class="mv">40%</div><div class="ml">Poisson</div></div>
+                        <div class="mp"><div class="mv">30%</div><div class="ml">Volaille</div></div>
+                    </div>
+                </div>
+                <div>
+                    <div style="display:flex;justify-content:space-between;font-size:.8rem;color:var(--dark-500);margin-bottom:5px"><span>Progression</span><span>45%</span></div>
+                    <div style="height:8px;background:var(--dark-100);border-radius:4px;overflow:hidden"><div style="height:100%;width:45%;background:var(--red-600);border-radius:4px"></div></div>
+                    <div class="tmu" style="margin-top:8px">Semaine 4 sur 8 â€” Continuez !</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alertes -->
+        <div class="alert asucc">âœ“ Votre profil est complet. Bonne continuation dans votre programme !</div>
+    </div>
+
+    <footer class="footer"><div class="fi"><span class="fb_">âœ¦ NutriPlan</span><span>Â© 2025 â€” Tous droits rÃ©servÃ©s</span><div class="fl_"><a href="#" style="color:inherit">Conditions</a><a href="#" style="color:inherit">ConfidentialitÃ©</a></div></div></footer>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• RÃ‰GIMES â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<div id="tab-regimes" class="tab-panel">
+    <nav class="navbar">
+        <div class="nb-brand"><span class="bi">âœ¦</span>Nutri<span class="ba">Plan</span></div>
+        <ul class="nb-nav">
+            <li><span class="nl">Tableau de bord</span></li>
+            <li><span class="nl a">RÃ©gimes</span></li>
+            <li><span class="nl">ActivitÃ©s</span></li>
+            <li><span class="nl">Mon Profil</span></li>
+        </ul>
+        <div class="nb-right"><div class="ua">JR</div></div>
+    </nav>
+
+    <div style="max-width:1100px;margin:0 auto;padding:2.5rem 2rem">
+        <div class="fb mb2">
+            <div>
+                <div class="pl">Catalogue</div>
+                <h1 style="font-family:var(--font-d);font-size:1.9rem;font-weight:700">Nos rÃ©gimes alimentaires</h1>
+                <p class="tmu">Choisissez un programme adaptÃ© Ã  vos objectifs</p>
+            </div>
+            <div>
+                <span class="gb" style="margin-right:8px">âœ¦ GOLD : âˆ’15%</span>
+            </div>
+        </div>
+
+        <!-- Objectifs -->
+        <div class="og mb2">
+            <div class="oc sel">
+                <div class="oi">ðŸ“‰</div>
+                <div class="on">RÃ©duire mon poids</div>
+                <div class="od">Perdre en douceur</div>
+            </div>
+            <div class="oc">
+                <div class="oi">ðŸ“ˆ</div>
+                <div class="on">Augmenter mon poids</div>
+                <div class="od">Prise de masse saine</div>
+            </div>
+            <div class="oc">
+                <div class="oi">âš–ï¸</div>
+                <div class="on">IMC idÃ©al</div>
+                <div class="od">Ã‰quilibre parfait</div>
+            </div>
+        </div>
+
+        <!-- Grille rÃ©gimes -->
+        <div class="rg">
+            <!-- RÃ©gime 1 -->
+            <div class="rc">
+                <div class="rc-top">
+                    <div>
+                        <div style="font-size:1.6rem;margin-bottom:6px">ðŸ¥—</div>
+                        <div class="rc-name">MÃ©diterranÃ©en</div>
+                        <div class="tmu" style="font-size:.76rem">Perte de poids progressive</div>
+                    </div>
+                    <div style="text-align:right">
+                        <div class="rc-price">8 500 <span>Ar/sem</span></div>
+                        <div style="font-size:.72rem;color:var(--red-600);font-weight:600">Gold : 7 225 Ar</div>
+                    </div>
+                </div>
+                <div class="rc-body">
+                    <div class="fw mb1">
+                        <div class="mp"><div class="mv">30%</div><div class="ml">Viande</div></div>
+                        <div class="mp"><div class="mv">40%</div><div class="ml">Poisson</div></div>
+                        <div class="mp"><div class="mv">30%</div><div class="ml">Volaille</div></div>
+                    </div>
+                    <div class="tmu" style="margin-bottom:1rem;font-size:.78rem">DurÃ©e recommandÃ©e : 6â€“8 semaines â€¢ âˆ’2 Ã  âˆ’4 kg</div>
+                    <button class="btn bp bfull">Choisir ce rÃ©gime</button>
+                </div>
+            </div>
+            <!-- RÃ©gime 2 -->
+            <div class="rc" style="border-color:var(--red-600);box-shadow:var(--sh-md)">
+                <div style="background:var(--red-600);padding:6px 1.5rem;font-size:.72rem;color:white;font-weight:600;letter-spacing:.05em">â­ LE PLUS POPULAIRE</div>
+                <div class="rc-top">
+                    <div>
+                        <div style="font-size:1.6rem;margin-bottom:6px">ðŸŸ</div>
+                        <div class="rc-name">RÃ©gime Marin</div>
+                        <div class="tmu" style="font-size:.76rem">Riche en protÃ©ines marines</div>
+                    </div>
+                    <div style="text-align:right">
+                        <div class="rc-price">10 200 <span>Ar/sem</span></div>
+                    </div>
+                </div>
+                <div class="rc-body">
+                    <div class="fw mb1">
+                        <div class="mp"><div class="mv">10%</div><div class="ml">Viande</div></div>
+                        <div class="mp"><div class="mv">70%</div><div class="ml">Poisson</div></div>
+                        <div class="mp"><div class="mv">20%</div><div class="ml">Volaille</div></div>
+                    </div>
+                    <div class="tmu" style="margin-bottom:1rem;font-size:.78rem">DurÃ©e recommandÃ©e : 4â€“6 semaines â€¢ âˆ’3 Ã  âˆ’5 kg</div>
+                    <button class="btn bp bfull">Choisir ce rÃ©gime</button>
+                </div>
+            </div>
+            <!-- RÃ©gime 3 -->
+            <div class="rc">
+                <div class="rc-top">
+                    <div>
+                        <div style="font-size:1.6rem;margin-bottom:6px">ðŸ—</div>
+                        <div class="rc-name">RÃ©gime ProtÃ©inÃ©</div>
+                        <div class="tmu" style="font-size:.76rem">Prise de masse musculaire</div>
+                    </div>
+                    <div style="text-align:right">
+                        <div class="rc-price">9 800 <span>Ar/sem</span></div>
+                    </div>
+                </div>
+                <div class="rc-body">
+                    <div class="fw mb1">
+                        <div class="mp"><div class="mv">40%</div><div class="ml">Viande</div></div>
+                        <div class="mp"><div class="mv">20%</div><div class="ml">Poisson</div></div>
+                        <div class="mp"><div class="mv">40%</div><div class="ml">Volaille</div></div>
+                    </div>
+                    <div class="tmu" style="margin-bottom:1rem;font-size:.78rem">DurÃ©e recommandÃ©e : 8â€“12 semaines â€¢ +3 Ã  +5 kg</div>
+                    <button class="btn bp bfull">Choisir ce rÃ©gime</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gold Banner -->
+        <div class="goldban mt2">
+            <div>
+                <h3>âœ¦ Option Gold â€” AccÃ¨s Premium</h3>
+                <p>Payez une fois, bÃ©nÃ©ficiez de 15% de rÃ©duction sur tous vos rÃ©gimes Ã  vie.</p>
+            </div>
+            <button class="btn bgold" style="flex-shrink:0">Activer Gold â€” 25 000 Ar</button>
+        </div>
+    </div>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• ADMIN PANEL â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<div id="tab-admin" class="tab-panel">
+    <div class="adm">
+        <!-- Sidebar -->
+        <div class="sb">
+            <div class="sb-logo">
+                <span style="color:var(--red-400)">âœ¦</span>
+                NutriPlan
+                <span class="sb-tag">Admin</span>
+            </div>
+            <nav class="sb-nav">
+                <div class="sb-sec">GÃ©nÃ©ral</div>
+                <div class="sb-lk a"><span class="sb-ic">â—ˆ</span> Tableau de bord</div>
+                <div class="sb-lk"><span class="sb-ic">â—‰</span> Statistiques</div>
+                <div class="sb-sec">Gestion</div>
+                <div class="sb-lk"><span class="sb-ic">â—†</span> RÃ©gimes (CRUD)</div>
+                <div class="sb-lk"><span class="sb-ic">â—‡</span> ActivitÃ©s sportives</div>
+                <div class="sb-lk"><span class="sb-ic">â—ˆ</span> Codes portefeuille</div>
+                <div class="sb-sec">Configuration</div>
+                <div class="sb-lk"><span class="sb-ic">â—</span> Utilisateurs</div>
+                <div class="sb-lk"><span class="sb-ic">â—‹</span> ParamÃ¨tres</div>
+            </nav>
+            <div style="padding:1rem 1.5rem;border-top:1px solid rgba(255,255,255,.08)">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+                    <div class="ua">AD</div>
+                    <div><div style="font-size:.83rem;font-weight:500;color:white">Administrateur</div><div style="font-size:.73rem;color:rgba(255,255,255,.4)">Super Admin</div></div>
+                </div>
+                <a href="#" style="font-size:.78rem;color:rgba(255,255,255,.4)">DÃ©connexion</a>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <div class="mc">
+            <div class="fb mb2">
+                <div><div class="pl">Back Office</div><h1>Tableau de bord</h1></div>
+                <div style="font-size:.83rem;color:var(--dark-500)">Jeudi 8 mai 2025</div>
+            </div>
+
+            <!-- Stats -->
+            <div class="sg">
+                <div class="sc"><div class="sv">5</div><div class="sl">Utilisateurs</div><div class="st stu">â†‘ +2 ce mois</div></div>
+                <div class="sc"><div class="sv">12</div><div class="sl">RÃ©gimes vendus</div><div class="st stu">â†‘ +5 cette sem.</div></div>
+                <div class="sc acc"><div class="sv">48 000</div><div class="sl">Revenus (Ar)</div><div class="st stu">â†‘ +12%</div></div>
+                <div class="sc"><div class="sv">15</div><div class="sl">Codes actifs</div><div class="st std">â†“ 3 utilisÃ©s</div></div>
+            </div>
+
+            <!-- Graphiques -->
+            <div class="g2 mb2">
+                <div class="card">
+                    <div class="ch"><span class="ct">Inscriptions mensuelles</span></div>
+                    <canvas id="ch1" height="180"></canvas>
+                </div>
+                <div class="card">
+                    <div class="ch"><span class="ct">RÃ©partition des objectifs</span></div>
+                    <canvas id="ch2" height="180"></canvas>
+                </div>
+            </div>
+
+            <!-- Table rÃ©gimes -->
+            <div class="card mb2">
+                <div class="ch">
+                    <span class="ct">RÃ©gimes â€” Liste</span>
+                    <button class="btn bp bsm">+ Ajouter</button>
+                </div>
+                <div style="overflow-x:auto">
+                    <table class="dt">
+                        <thead><tr><th>Nom</th><th>Viande / Poisson / Volaille</th><th>DurÃ©e</th><th>Prix/sem.</th><th>Souscriptions</th><th>Actions</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>MÃ©diterranÃ©en</strong></td><td>30% / 40% / 30%</td><td>8 sem.</td><td>8 500 Ar</td><td><span class="bdr bdred">4 users</span></td><td><div class="fw"><button class="btn bg_ bsm">Ã‰diter</button><button class="btn bsm" style="color:var(--red-600);border-color:var(--red-100)">Suppr.</button></div></td></tr>
+                            <tr><td><strong>RÃ©gime Marin</strong></td><td>10% / 70% / 20%</td><td>6 sem.</td><td>10 200 Ar</td><td><span class="bdr bdred">5 users</span></td><td><div class="fw"><button class="btn bg_ bsm">Ã‰diter</button><button class="btn bsm" style="color:var(--red-600);border-color:var(--red-100)">Suppr.</button></div></td></tr>
+                            <tr><td><strong>RÃ©gime ProtÃ©inÃ©</strong></td><td>40% / 20% / 40%</td><td>12 sem.</td><td>9 800 Ar</td><td><span class="bdr bdred">3 users</span></td><td><div class="fw"><button class="btn bg_ bsm">Ã‰diter</button><button class="btn bsm" style="color:var(--red-600);border-color:var(--red-100)">Suppr.</button></div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Codes portefeuille -->
+            <div class="card">
+                <div class="ch">
+                    <span class="ct">Codes portefeuille</span>
+                    <button class="btn bp bsm">+ Nouveau code</button>
+                </div>
+                <div style="overflow-x:auto">
+                    <table class="dt">
+                        <thead><tr><th>Code</th><th>Montant</th><th>UtilisÃ© par</th><th>Statut</th></tr></thead>
+                        <tbody>
+                            <tr><td><code style="background:var(--dark-100);padding:2px 8px;border-radius:4px;font-size:.82rem">NP-2025-ALPHA</code></td><td>5 000 Ar</td><td>jean.razak@mail.mg</td><td><span class="bdr bdgray">UtilisÃ©</span></td></tr>
+                            <tr><td><code style="background:var(--dark-100);padding:2px 8px;border-radius:4px;font-size:.82rem">NP-2025-BETA7</code></td><td>10 000 Ar</td><td>â€”</td><td><span class="bdr bdgreen">Disponible</span></td></tr>
+                            <tr><td><code style="background:var(--dark-100);padding:2px 8px;border-radius:4px;font-size:.82rem">NP-GOLD-XK12</code></td><td>20 000 Ar</td><td>â€”</td><td><span class="bdr bdgreen">Disponible</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div><!-- end mc -->
+    </div>
+</div>
+
+<script>
+// Charts admin
+document.addEventListener('DOMContentLoaded', ()=>{
+    if(!document.getElementById('ch1')) return;
+    new Chart(document.getElementById('ch1'),{type:'bar',data:{labels:['Jan','FÃ©v','Mar','Avr','Mai','Juin'],datasets:[{label:'Inscriptions',data:[2,3,1,4,5,3],backgroundColor:'#C0392B',borderRadius:6}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,.05)'}},x:{grid:{display:false}}}}});
+    new Chart(document.getElementById('ch2'),{type:'doughnut',data:{labels:['â†‘ Poids','â†“ Poids','IMC idÃ©al'],datasets:[{data:[30,45,25],backgroundColor:['#C0392B','#E74C3C','#F0B7B0'],borderWidth:0}]},options:{cutout:'65%',plugins:{legend:{position:'bottom'}}}});
+});
+// Objectif cards
+document.querySelectorAll('.oc').forEach(c=>{
+    c.addEventListener('click',()=>{
+        document.querySelectorAll('.oc').forEach(x=>x.classList.remove('sel'));
+        c.classList.add('sel');
+    });
+});
+</script>
+</body>
+</html>
+
+
