@@ -59,6 +59,6 @@ class ObjectifController extends BaseController
             'inscription_etape' => 'objectif_choisi',
         ]);
 
-                return redirect()->to(site_url('objectifs'))->with('success', 'Objectif enregistré avec succès.');
-            }
-        }
+        return redirect()->to(site_url('objectifs'))->with('success', 'Objectif enregistré avec succès.');
+    }
+}
