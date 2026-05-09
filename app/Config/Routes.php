@@ -28,4 +28,10 @@ $routes->get('/inscription/objectifs', 'ObjectifController::index');
 $routes->group('objectifs', static function ($routes) {
     $routes->get('/', 'ObjectifController::index');
     $routes->post('selectionner', 'ObjectifController::selectionner');
+
+    $routes->get('getDetailsForm', 'ObjectifController::getDetailsForm');
+
+    // 3. Traitement final du formulaire (POST)
+    // URL : localhost:8080/objectifs/selectionner
+    $routes->post('selectionner', 'ObjectifController::selectionner');
 });

@@ -17,3 +17,8 @@ CREATE TABLE objectifs_utilisateur (
 insert into objectifs (nom) values ('Perte de poids');
 insert into objectifs (nom) values ('Prise de muscle');
 insert into objectifs (nom) values ('Maintien du poids');
+
+ALTER TABLE objectifs_utilisateur 
+ADD COLUMN poids_cible REAL NOT NULL,      -- Le poids que l'utilisateur veut atteindre
+ADD COLUMN duree_objectif_semaine INT NOT NULL, -- La durée (convertie en semaines pour les calculs)
+ADD COLUMN ecart_poids REAL;              -- Différence entre poids actuel et cible (ex: -5 ou +3)
