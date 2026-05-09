@@ -180,6 +180,7 @@ table.dt{width:100%;border-collapse:collapse;font-size:.86rem}
 </style>
 </head>
 <body>
+<?php $errors = $errors ?? session()->getFlashdata('errors') ?? []; ?>
 
 <!-- BARRE DE NAVIGATION DES PREVIEWS -->
 <div class="preview-bar">
@@ -200,6 +201,10 @@ table.dt{width:100%;border-collapse:collapse;font-size:.86rem}
                 </div>
 
                 <form method="POST" action="<?php echo base_url('inscription/inscription'); ?>">
+                    <?php if (session()->getFlashdata('error')): ?>
+                        <div class="alert adang"><?php echo esc(session()->getFlashdata('error')); ?></div>
+                    <?php endif; ?>
+
                     <!-- Nom -->
                     <div class="fg">
                         <label class="fl">Nom <span style="color:var(--red-600)">*</span></label>
