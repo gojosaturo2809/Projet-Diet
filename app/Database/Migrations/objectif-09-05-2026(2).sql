@@ -13,3 +13,7 @@ CREATE TABLE objectifs_utilisateur (
     FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id) ON DELETE CASCADE,
     FOREIGN KEY (id_objectif) REFERENCES objectifs(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+insert into objectifs (nom) values ('Perte de poids');
+insert into objectifs (nom) values ('Prise de muscle');
+insert into objectifs (nom) values ('Maintien du poids');

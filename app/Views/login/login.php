@@ -18,6 +18,24 @@
     --sh-sm:0 1px 3px rgba(0,0,0,.08);--sh-md:0 4px 16px rgba(0,0,0,.10);
     --t:.22s cubic-bezier(.4,0,.2,1);
 }
+
+/* Messages d'alerte */
+.alert {
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 5px;
+    font-weight: 500;
+}
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:16px;scroll-behavior:smooth}
 body{font-family:var(--font-b);background:var(--dark-100);color:var(--dark-900);line-height:1.6}
@@ -191,6 +209,33 @@ table.dt{width:100%;border-collapse:collapse;font-size:.86rem}
     <button class="tab-btn" onclick="showTab('admin')">Admin Panel</button>
 </div>
 
+<!-- Messages d'alerte -->
+<?php if(session()->getFlashdata('success')): ?>
+<div class="alert alert-success">
+    <?= session()->getFlashdata('success') ?>
+</div>
+<?php endif; ?>
+
+<?php if(session()->getFlashdata('error')): ?>
+<div class="alert alert-error">
+    <?= session()->getFlashdata('error') ?>
+</div>
+<?php endif; ?>
+
+<?php if(isset($errors)): ?>
+<div class="alert alert-error">
+    <?php if(is_array($errors)): ?>
+        <ul>
+            <?php foreach($errors as $error): ?>
+                <li><?= esc($error) ?></li>
+            <?php endforeach; ?>
+        </ul>
+    <?php else: ?>
+        <?= esc($errors) ?>
+    <?php endif; ?>
+</div>
+<?php endif; ?>
+
 <!-- ═══════════════════ LOGIN ═══════════════════ -->
 <div id="tab-login" class="tab-panel active">
     <div class="auth-layout">
@@ -213,11 +258,18 @@ table.dt{width:100%;border-collapse:collapse;font-size:.86rem}
             <div class="ab">
                 <h2>Bon retour </h2>
                 <p>Connectez-vous à votre compte NutriPlan</p>
-                <div class="alert adang">Email ou mot de passe incorrect.</div>
-                <div class="fg"><label class="fl">Adresse email</label><input type="email" class="fc" placeholder="vous@exemple.com"></div>
-                <div class="fg"><label class="fl">Mot de passe</label><input type="password" class="fc" placeholder="••••••••"></div>
-                <div style="display:flex;justify-content:flex-end;margin:-.5rem 0 1rem"><a href="#" style="font-size:.8rem;color:var(--red-600)">Mot de passe oublié ?</a></div>
-                <button class="btn bp bfull blg">Se connecter</button>
+                <form action="<?php echo base_url('login/login'); ?>" method="POST">
+                    <div class="fg"><label class="fl">Adresse email</label><input type="email" name="email" class="fc" placeholder="vous@exemple.com" required></div>
+                    <?php if (isset($errors['email'])): ?>
+                        <small style="color:var(--red-600);"><?php echo $errors['email']; ?></small>
+                    <?php endif; ?>
+                    <div class="fg"><label class="fl">Mot de passe</label><input type="password" name="mot_de_passe" class="fc" placeholder="••••••••" required></div>
+                    <?php if (isset($errors['mot_de_passe'])): ?>
+                        <small style="color:var(--red-600);"><?php echo $errors['mot_de_passe']; ?></small>
+                    <?php endif; ?>
+                    <div style="display:flex;justify-content:flex-end;margin:-.5rem 0 1rem"><a href="#" style="font-size:.8rem;color:var(--red-600)">Mot de passe oublié ?</a></div>
+                    <input type="submit" value="Se connecter" class="btn bp bfull blg">
+                </form>
                 <div class="dv"></div>
                 <p style="text-align:center;font-size:.85rem;color:var(--dark-500)">Pas encore de compte ? <a href="<?php echo base_url('inscription'); ?>" style="color:var(--red-600);font-weight:500">Créer un compte</a></p>
             </div>
