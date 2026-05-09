@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Controllers;
 
@@ -51,7 +51,7 @@ class Inscription extends BaseController
 
         return $this->response->setJSON([
             'status'    => 'success',
-            'message'   => 'Informations de santé enregistrées.',
+            'message'   => 'Informations de santÃ© enregistrÃ©es.',
             'health'    => $healthData,
         ]);
     }
@@ -62,7 +62,7 @@ class Inscription extends BaseController
 
         if (! is_array($healthData) || $healthData === []) {
             return redirect()->to(site_url('inscription'))
-                ->with('error', 'Commencez par enregistrer vos informations de santé.');
+                ->with('error', 'Commencez par enregistrer vos informations de santÃ©.');
         }
 
         $compteModel = new UtilisateurInscriptionModel();
@@ -84,7 +84,7 @@ class Inscription extends BaseController
 
             return redirect()->back()
                 ->withInput()
-                ->with('errors', ['database' => 'Impossible de créer le compte utilisateur.']);
+                ->with('errors', ['database' => 'Impossible de crÃ©er le compte utilisateur.']);
         }
 
         $infoSanteModel = new InfoSanteModel();
@@ -94,7 +94,7 @@ class Inscription extends BaseController
 
             return redirect()->back()
                 ->withInput()
-                ->with('errors', ['database' => 'Impossible d\'enregistrer les informations de santé.']);
+                ->with('errors', ['database' => 'Impossible d\'enregistrer les informations de santÃ©.']);
         }
 
         if ($db->transStatus() === false) {
@@ -102,7 +102,7 @@ class Inscription extends BaseController
 
             return redirect()->back()
                 ->withInput()
-                ->with('errors', ['database' => 'La transaction a échoué.']);
+                ->with('errors', ['database' => 'La transaction a Ã©chouÃ©.']);
         }
 
         $db->transCommit();
@@ -121,6 +121,7 @@ class Inscription extends BaseController
         ]);
 
         return redirect()->to(site_url('objectifs'))
-            ->with('success', 'Compte créé. Choisissez maintenant votre objectif.');
+            ->with('success', 'Compte crÃ©Ã©. Choisissez maintenant votre objectif.');
     }
 }
+

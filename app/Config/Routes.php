@@ -9,6 +9,8 @@ $routes->get('/', 'Login::index');
 $routes->get('/login', 'Login::index');
 $routes->post('/login', 'Login::login');
 $routes->post('/login/login', 'Login::login');
+$routes->get('/dashboard', 'Dashboard::index');
+$routes->get('/logout', 'Login::logout');
 $routes->get('/inscription', 'Inscription::index');
 $routes->post('/inscription/inscription', 'Inscription::inscription');
 

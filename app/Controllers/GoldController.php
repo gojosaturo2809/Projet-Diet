@@ -8,8 +8,12 @@ class GoldController extends BaseController
 {
     public function index()
     {
+        $userId = (int) (session('user_id') ?? 0);
+        $walletModel = new WalletModel();
+
         return view('gold/gold', [
             'isGold' => (bool) session('is_gold'),
+            'solde' => $userId > 0 ? $walletModel->getSoldeUtilisateur($userId) : null,
         ]);
     }
 
