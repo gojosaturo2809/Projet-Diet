@@ -8,7 +8,7 @@ class ObjectifController extends BaseController
 {
     public function index()
     {
-        $idUtilisateur = (int) (session()->get('id_utilisateur') ?? session()->get('user_id') ?? 0);
+        $idUtilisateur = (int) (session()->get('id_utilisateur') ?? 0);
 
         if ($idUtilisateur <= 0) {
             return redirect()->to(site_url('inscription'))
@@ -25,7 +25,7 @@ class ObjectifController extends BaseController
 
     public function selectionner()
     {
-        $idUtilisateur = (int) (session()->get('id_utilisateur') ?? session()->get('user_id') ?? 0);
+        $idUtilisateur = (int) (session()->get('id_utilisateur') ?? 0);
 
         if ($idUtilisateur <= 0) {
             return redirect()->to(site_url('inscription'))
@@ -54,11 +54,11 @@ class ObjectifController extends BaseController
         $objectif = $model->find($idObjectif);
 
         session()->set([
-            'objectif_id'       => $objectif['id'],
-            'objectif_nom'      => $objectif['nom'],
+            'objectif_id'    => $objectif['id'],
+            'objectif_nom'   => $objectif['nom'],
             'inscription_etape' => 'objectif_choisi',
         ]);
 
-        return redirect()->to(site_url('dashboard'))->with('success', 'Objectif enregistré avec succès. Bienvenue sur votre tableau de bord.');
+        return redirect()->to(site_url('objectifs'))->with('success', 'Objectif enregistré avec succès.');
     }
 }
