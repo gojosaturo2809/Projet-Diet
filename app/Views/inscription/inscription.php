@@ -236,6 +236,29 @@ table.dt{width:100%;border-collapse:collapse;font-size:.86rem}
                         <?php endif; ?>
                     </div>
 
+                    <!-- Séparateur -->
+                    <div style="margin: 2rem 0; border-top: 2px solid var(--dark-200); position: relative;">
+                        <span style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: white; padding: 0 1rem; font-size: 0.9rem; font-weight: 600; color: var(--dark-700);">Informations de santé</span>
+                    </div>
+
+                    <!-- Poids -->
+                    <div class="fg">
+                        <label class="fl">Poids (kg) <span style="color:var(--red-600)">*</span></label>
+                        <input type="number" name="poids" class="fc" placeholder="70.5" step="0.1" min="1" value="<?php echo old('poids'); ?>" required>
+                        <?php if (isset($errors['poids'])): ?>
+                            <small style="color:var(--red-600);"><?php echo $errors['poids']; ?></small>
+                        <?php endif; ?>
+                    </div>
+
+                    <!-- Taille -->
+                    <div class="fg">
+                        <label class="fl">Taille (cm) <span style="color:var(--red-600)">*</span></label>
+                        <input type="number" name="taille" class="fc" placeholder="175" step="0.1" min="50" value="<?php echo old('taille'); ?>" required>
+                        <?php if (isset($errors['taille'])): ?>
+                            <small style="color:var(--red-600);"><?php echo $errors['taille']; ?></small>
+                        <?php endif; ?>
+                    </div>
+
                     <div class="fw" style="justify-content:space-between;gap:1rem">
                         <input type="submit" value="S'inscrire" class="btn bp bfull blg">
                     </div>

@@ -8,13 +8,15 @@ class InscrptionModele extends Model{
     protected $table = 'utilisateur';
 
     protected $primaryKey = 'id';
-    protected $allowedFields = ['nom', 'prenom', 'email', 'mot_de_passe'];
+    protected $allowedFields = ['nom', 'prenom', 'email', 'mot_de_passe', 'poids', 'taille'];
 
     protected $validationRules = [
         'nom' => 'required|min_length[2]|max_length[50]',
         'prenom' => 'required|min_length[2]|max_length[50]',
         'email' => 'required|valid_email|is_unique[utilisateur.email]',
         'mot_de_passe' => 'required|min_length[6]',
+        'poids' => 'required|numeric|greater_than[0]',
+        'taille' => 'required|numeric|greater_than[0]',
     ];
 
     protected $validationMessages = [
@@ -36,6 +38,16 @@ class InscrptionModele extends Model{
         'mot_de_passe' => [
             'required' => 'Le mot de passe est requis',
             'min_length' => 'Le mot de passe doit comporter au moins 6 caractères',
+        ],
+        'poids' => [
+            'required' => 'Le poids est requis',
+            'numeric' => 'Le poids doit être un nombre',
+            'greater_than' => 'Le poids doit être supérieur à 0',
+        ],
+        'taille' => [
+            'required' => 'La taille est requise',
+            'numeric' => 'La taille doit être un nombre',
+            'greater_than' => 'La taille doit être supérieure à 0',
         ],
     ];
 
