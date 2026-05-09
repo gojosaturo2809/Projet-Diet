@@ -4,6 +4,10 @@ namespace App\Controllers;
 
 class Login extends BaseController{
 
+public function index(){
+    return view('login/login');
+}
+
 public function login(){
     try {
         $model = new \App\Models\LoginModel();
