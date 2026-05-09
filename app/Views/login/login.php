@@ -39,14 +39,14 @@
         <div class="al">
             <div class="al-inner">
                 <div style="display:flex;align-items:center;gap:8px;margin-bottom:2.5rem;">
-                    <span style="color:rgba(255,255,255,.7);font-size:1.1rem">✦</span>
+                    <span style="color:rgba(255,255,255,.7);font-size:1.1rem">âœ¦</span>
                     <span style="font-family:var(--font-d);font-size:1.4rem;font-weight:700">NutriPlan</span>
                 </div>
                 <div class="bt">Votre corps,<br>votre programme.</div>
-                <p style="opacity:.85;font-size:.95rem;line-height:1.7;margin-bottom:2.5rem">Découvrez un régime alimentaire personnalisé selon vos objectifs. Calculez votre IMC et transformez votre quotidien.</p>
+                <p style="opacity:.85;font-size:.95rem;line-height:1.7;margin-bottom:2.5rem">DÃ©couvrez un rÃ©gime alimentaire personnalisÃ© selon vos objectifs. Calculez votre IMC et transformez votre quotidien.</p>
                 <div style="display:flex;gap:2rem">
                     <div><div style="font-family:var(--font-d);font-size:1.7rem;font-weight:700">500+</div><div style="font-size:.78rem;opacity:.75">Utilisateurs</div></div>
-                    <div><div style="font-family:var(--font-d);font-size:1.7rem;font-weight:700">5</div><div style="font-size:.78rem;opacity:.75">Régimes</div></div>
+                    <div><div style="font-family:var(--font-d);font-size:1.7rem;font-weight:700">5</div><div style="font-size:.78rem;opacity:.75">RÃ©gimes</div></div>
                     <div><div style="font-family:var(--font-d);font-size:1.7rem;font-weight:700">15%</div><div style="font-size:.78rem;opacity:.75">Remise Gold</div></div>
                 </div>
             </div>

@@ -1,6 +1,7 @@
-﻿-- SQLite Database Schema for NutriPlan
-create database if not exists regime;
-use regime;
+﻿-- MySQL Database Schema for NutriPlan
+CREATE DATABASE IF NOT EXISTS regime;
+USE regime;
+
 CREATE TABLE IF NOT EXISTS utilisateur (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nom VARCHAR(255) NOT NULL,
@@ -12,11 +13,11 @@ CREATE TABLE IF NOT EXISTS utilisateur (
     is_gold TINYINT(1) DEFAULT 0
 );
 
-CREATE TABLE IF NOT EXISTS info_sante(
+CREATE TABLE IF NOT EXISTS info_sante (
     id_info INT PRIMARY KEY AUTO_INCREMENT,
     id_utilisateur INT NOT NULL,
-    poids REAL NOT NULL,
-    taille REAL NOT NULL,
+    poids DECIMAL(6,2) NOT NULL,
+    taille DECIMAL(6,2) NOT NULL,
     FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id)
 );
 
