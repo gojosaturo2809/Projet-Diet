@@ -25,4 +25,22 @@ class LoginModel extends Model{
             'min_length' => 'Le mot de passe doit comporter au moins 6 caractères',
         ],
     ];
+
+
+    public function authenticate($email, $password)
+    {
+        // Recherche l'utilisateur par email
+        $user = $this->where('email', $email)->first();
+        
+        if (!$user) {
+            return false; // Email n'existe pas
+        }
+
+        // Vérifie le mot de passe (supposant qu'il n'est pas hashé pour l'instant)
+        if ($user['mot_de_passe'] === $password) {
+            return $user; // Retourne les données utilisateur
+        }
+
+        return false; // Mot de passe incorrect
+    }
 }
