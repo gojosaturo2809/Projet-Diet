@@ -113,17 +113,22 @@ class ObjectifController extends BaseController
         }
 
         $imcPrevu = $poidsCible / ($tailleMetres * $tailleMetres);
+        $warning = '';
 
         if ($imcPrevu < 18.5 && $idObjectif === 1) {
-            return redirect()->back()->withInput()
-                ->with('error_poids', 'Attention : Ce poids cible est trop bas pour votre santé (IMC < 18.5).');
+            $warning = 'Attention : Ce poids cible est très bas (IMC < 18.5). Soyez prudent.';
         }
 
         if (! $model->saveUserObjective($idUtilisateur, $idObjectif, $poidsCible, $duree)) {
             return redirect()->back()->withInput()
-                ->with('error', 'Une erreur est survenue lors de l’enregistrement.');
+                ->with('error', 'Une erreur lors de l enregistrement.');
         }
 
-        return redirect()->to(site_url('dashboard'))->with('success', 'Objectif enregistré avec succès.');
+        $msg = 'Objectif enregistre avec succes.';
+        if ($warning) {
+            $msg .= ' ' . $warning;
+        }
+
+        return redirect()->to(site_url('dashboard'))->with('success', $msg);
     }
 }
