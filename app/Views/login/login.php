@@ -3,24 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NutriPlan â€” Design Preview</title>
+<title>NutriPlan - Connexion</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<link rel="stylesheet" href="<?= base_url('css/login.css') ?>">
 </head>
 <body>
-
-<!-- BARRE DE NAVIGATION DES PREVIEWS -->
-<div class="preview-bar">
-    <div class="preview-brand">Nutri<span>Plan</span> â€” Design Preview</div>
-    <button class="tab-btn active" onclick="showTab('login')">Login</button>
-    <button class="tab-btn" onclick="showTab('register')">Inscription</button>
-    <button class="tab-btn" onclick="showTab('dashboard')">Dashboard User</button>
-    <button class="tab-btn" onclick="showTab('regimes')">RÃ©gimes</button>
-    <button class="tab-btn" onclick="showTab('admin')">Admin Panel</button>
+<!-- Messages d'alerte -->
+<?php if(session()->getFlashdata('success')): ?>
+<div class="alert alert-success">
+    <?= session()->getFlashdata('success') ?>
 </div>
+<?php endif; ?>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• LOGIN â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<?php if(session()->getFlashdata('error')): ?>
+<div class="alert alert-error">
+    <?= session()->getFlashdata('error') ?>
+</div>
+<?php endif; ?>
+
+<?php if(isset($errors)): ?>
+<div class="alert alert-error">
+    <?php if(is_array($errors)): ?>
+        <ul>
+            <?php foreach($errors as $error): ?>
+                <li><?= esc($error) ?></li>
+            <?php endforeach; ?>
+        </ul>
+    <?php else: ?>
+        <?= esc($errors) ?>
+    <?php endif; ?>
+</div>
+<?php endif; ?>
+
 <div id="tab-login" class="tab-panel active">
     <div class="auth-layout">
         <div class="al">
@@ -40,16 +53,25 @@
         </div>
         <div class="ar">
             <div class="ab">
-                <h2>Bon retour </h2>
-                <p>Connectez-vous Ã  votre compte NutriPlan</p>
-                <div class="alert adang">Email ou mot de passe incorrect.</div>
-                <div class="fg"><label class="fl">Adresse email</label><input type="email" class="fc" placeholder="vous@exemple.com"></div>
-                <div class="fg"><label class="fl">Mot de passe</label><input type="password" class="fc" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"></div>
-                <div style="display:flex;justify-content:flex-end;margin:-.5rem 0 1rem"><a href="#" style="font-size:.8rem;color:var(--red-600)">Mot de passe oubliÃ© ?</a></div>
-                <button class="btn bp bfull blg">Se connecter</button>
+                <h2>Bon retour</h2>
+                <p>Connectez-vous à votre compte NutriPlan</p>
+                <form action="<?= site_url('login') ?>" method="POST">
+                    <div class="fg"><label class="fl">Adresse email</label><input type="email" name="email" class="fc" placeholder="vous@exemple.com" required></div>
+                    <?php if (isset($errors['email'])): ?>
+                        <small style="color:var(--red-600);"><?= esc($errors['email']) ?></small>
+                    <?php endif; ?>
+                    <div class="fg"><label class="fl">Mot de passe</label><input type="password" name="mot_de_passe" class="fc" placeholder="••••••••" required></div>
+                    <?php if (isset($errors['mot_de_passe'])): ?>
+                        <small style="color:var(--red-600);"><?= esc($errors['mot_de_passe']) ?></small>
+                    <?php endif; ?>
+                    <div style="display:flex;justify-content:flex-end;margin:-.5rem 0 1rem"><a href="#" style="font-size:.8rem;color:var(--red-600)">Mot de passe oublié ?</a></div>
+                    <input type="submit" value="Se connecter" class="btn bp bfull blg">
+                </form>
                 <div class="dv"></div>
-                <p style="text-align:center;font-size:.85rem;color:var(--dark-500)">Pas encore de compte ? <a href="<?php echo base_url('inscription'); ?>" style="color:var(--red-600);font-weight:500">CrÃ©er un compte</a></p>
+                <p style="text-align:center;font-size:.85rem;color:var(--dark-500)">Pas encore de compte ? <a href="<?= site_url('inscription') ?>" style="color:var(--red-600);font-weight:500">Créer un compte</a></p>
             </div>
         </div>
     </div>
 </div>
+</body>
+</html>

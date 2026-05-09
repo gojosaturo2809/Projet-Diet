@@ -1,77 +1,159 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NutriPlan â€” Design Preview</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<link rel="stylesheet" href="<?= base_url('css/inscription.css') ?>">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriPlan - Inscription</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="<?= base_url('css/inscription.css') ?>">
 </head>
 <body>
+<?php
+$healthData = is_array($healthData ?? null) ? $healthData : [];
+$errors = is_array($errors ?? null) ? $errors : [];
+$initialStep = ! empty($healthData) ? 2 : 1;
+$imcValue = isset($healthData['imc']) ? number_format((float) $healthData['imc'], 1, ',', ' ') : '—';
+$imcLabel = $healthData['categorie'] ?? 'Renseignez votre poids et votre taille pour calculer votre IMC.';
+$flashError = session()->getFlashdata('error');
+$flashSuccess = session()->getFlashdata('success');
+?>
+<main class="signup-shell">
+    <section class="signup-card">
+        <div class="brand-row">
+            <div class="brand">NutriPlan</div>
+        </div>
 
-<!-- BARRE DE NAVIGATION DES PREVIEWS -->
-<div class="preview-bar">
-    <div class="preview-brand">Nutri<span>Plan</span> â€” Design Preview</div>
-    <button class="tab-btn active" onclick="showTab('login')">Login</button>
-    <button class="tab-btn" onclick="showTab('register')">Inscription</button>
-    <button class="tab-btn" onclick="showTab('dashboard')">Dashboard User</button>
-    <button class="tab-btn" onclick="showTab('regimes')">RÃ©gimes</button>
-    <button class="tab-btn" onclick="showTab('admin')">Admin Panel</button>
-</div>
+        <div class="wizard-steps" data-wizard-steps>
+            <div class="wizard-step <?= $initialStep >= 1 ? 'is-active' : '' ?>" data-step-indicator="1">
+                <span>1</span>
+                <strong>Santé</strong>
+            </div>
+            <div class="wizard-line"></div>
+            <div class="wizard-step <?= $initialStep >= 2 ? 'is-active' : '' ?>" data-step-indicator="2">
+                <span>2</span>
+                <strong>Compte</strong>
+            </div>
+            <div class="wizard-line"></div>
+            <div class="wizard-step" data-step-indicator="3">
+                <span>3</span>
+                <strong>Objectif</strong>
+            </div>
+        </div>
 
+        <?php if ($flashError) : ?>
+            <div class="flash flash-error"><?= esc($flashError) ?></div>
+        <?php endif; ?>
 
-            <!-- Ã‰tape 1 : Informations personnelles -->
-            <div class="card">
-                <div class="ch">
-                    <span class="ct">CrÃ©er un compte</span>
-                    <span class="tmu">Ã‰tape 1 / 3</span>
+        <?php if ($flashSuccess) : ?>
+            <div class="flash flash-success"><?= esc($flashSuccess) ?></div>
+        <?php endif; ?>
+
+        <div class="wizard-panels">
+            <section class="wizard-panel <?= $initialStep === 1 ? 'is-visible' : '' ?>" data-panel="health">
+                <div class="panel-head center">
+                    <div>
+                        <p class="eyebrow">Étape 1 / 3</p>
+                        <h2>Informations de santé</h2>
+                    </div>
                 </div>
 
-                <form method="POST" action="<?php echo base_url('inscription/inscription'); ?>">
-                    <!-- Nom -->
-                    <div class="fg">
-                        <label class="fl">Nom <span style="color:var(--red-600)">*</span></label>
-                        <input type="text" name="nom" class="fc" placeholder="Dupont" value="<?php echo old('nom'); ?>" required>
-                        <?php if (isset($errors['nom'])): ?>
-                            <small style="color:var(--red-600);"><?php echo $errors['nom']; ?></small>
-                        <?php endif; ?>
+                <form class="step-form" action="<?= site_url('inscription/sante') ?>" method="post" data-health-form>
+                    <div class="grid-two">
+                        <div class="field">
+                            <label for="poids">Poids (kg)</label>
+                            <input id="poids" name="poids" type="number" min="1" step="0.1" placeholder="65" value="<?= esc($healthData['poids'] ?? '') ?>" required>
+                            <small class="field-error" data-error-for="poids"></small>
+                        </div>
+                        <div class="field">
+                            <label for="taille">Taille (cm)</label>
+                            <input id="taille" name="taille" type="number" min="50" step="0.1" placeholder="170" value="<?= esc($healthData['taille'] ?? '') ?>" required>
+                            <small class="field-error" data-error-for="taille"></small>
+                        </div>
                     </div>
 
-                    <!-- PrÃ©nom -->
-                    <div class="fg">
-                        <label class="fl">PrÃ©nom <span style="color:var(--red-600)">*</span></label>
-                        <input type="text" name="prenom" class="fc" placeholder="Jean" value="<?php echo old('prenom'); ?>" required>
-                        <?php if (isset($errors['prenom'])): ?>
-                            <small style="color:var(--red-600);"><?php echo $errors['prenom']; ?></small>
-                        <?php endif; ?>
+                    <div class="imc-card" data-imc-card>
+                        <p class="imc-label">IMC calculé</p>
+                        <div class="imc-value" data-imc-value><?= esc($imcValue) ?></div>
+                        <p class="imc-caption" data-imc-caption><?= esc($imcLabel) ?></p>
                     </div>
 
-                    <!-- Email -->
-                    <div class="fg">
-                        <label class="fl">Adresse email <span style="color:var(--red-600)">*</span></label>
-                        <input type="email" name="email" class="fc" placeholder="vous@exemple.com" value="<?php echo old('email'); ?>" required>
-                        <?php if (isset($errors['email'])): ?>
-                            <small style="color:var(--red-600);"><?php echo $errors['email']; ?></small>
-                        <?php endif; ?>
+                    <div class="step-actions">
+                        <button type="submit" class="btn btn-primary">Continuer</button>
+                    </div>
+                    <div class="flash flash-error is-hidden" data-health-message></div>
+                </form>
+            </section>
+
+            <section class="wizard-panel <?= $initialStep === 2 ? 'is-visible' : '' ?>" data-panel="account">
+                <div class="panel-head center">
+                    <div>
+                        <p class="eyebrow">Étape 2 / 3</p>
+                        <h2>Informations personnelles</h2>
+                    </div>
+                </div>
+
+                <?php if (! empty($errors)) : ?>
+                    <div class="flash flash-error">
+                        <ul class="error-list">
+                            <?php foreach ($errors as $error) : ?>
+                                <li><?= esc($error) ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                <?php endif; ?>
+
+                <div class="health-summary">
+                    <span>Vos données santé sont enregistrées.</span>
+                    <strong><?= esc($imcLabel) ?> - IMC <?= esc($imcValue) ?></strong>
+                </div>
+
+                <form class="step-form" action="<?= site_url('inscription/inscription') ?>" method="post" data-account-form>
+                    <div class="grid-two">
+                        <div class="field">
+                            <label for="nom">Nom</label>
+                            <input id="nom" name="nom" type="text" placeholder="Dupont" value="<?= esc(old('nom')) ?>" required>
+                            <?php if (isset($errors['nom'])) : ?><small class="field-error visible"><?= esc($errors['nom']) ?></small><?php endif; ?>
+                        </div>
+                        <div class="field">
+                            <label for="prenom">Prénom</label>
+                            <input id="prenom" name="prenom" type="text" placeholder="Jean" value="<?= esc(old('prenom')) ?>" required>
+                            <?php if (isset($errors['prenom'])) : ?><small class="field-error visible"><?= esc($errors['prenom']) ?></small><?php endif; ?>
+                        </div>
                     </div>
 
-                    <!-- Mot de passe -->
-                    <div class="fg">
-                        <label class="fl">Mot de passe <span style="color:var(--red-600)">*</span></label>
-                        <input type="password" name="mot_de_passe" class="fc" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" required>
-                        <?php if (isset($errors['mot_de_passe'])): ?>
-                            <small style="color:var(--red-600);"><?php echo $errors['mot_de_passe']; ?></small>
-                        <?php endif; ?>
+                    <div class="field">
+                        <label for="email">Email</label>
+                        <input id="email" name="email" type="email" placeholder="vous@exemple.com" value="<?= esc(old('email')) ?>" required>
+                        <?php if (isset($errors['email'])) : ?><small class="field-error visible"><?= esc($errors['email']) ?></small><?php endif; ?>
                     </div>
 
-                    <div class="fw" style="justify-content:space-between;gap:1rem">
-                        <input type="submit" value="S'inscrire" class="btn bp bfull blg">
+                    <div class="field">
+                        <label for="mot_de_passe">Mot de passe</label>
+                        <input id="mot_de_passe" name="mot_de_passe" type="password" placeholder="••••••••" required>
+                        <?php if (isset($errors['mot_de_passe'])) : ?><small class="field-error visible"><?= esc($errors['mot_de_passe']) ?></small><?php endif; ?>
+                    </div>
+
+                    <div class="step-actions two-actions">
+                        <button type="button" class="btn btn-secondary" data-back-to-health>Retour</button>
+                        <button type="submit" class="btn btn-primary">Créer mon compte</button>
                     </div>
                 </form>
 
-                <p style="text-align:center;font-size:.85rem;color:var(--dark-500);margin-top:1rem">Vous avez dÃ©jÃ  un compte ? <a href="#" style="color:var(--red-600);font-weight:500" onclick="showTab('login');return false">Se connecter</a></p>
-            </div>
+                <p class="login-link">Vous avez déjà un compte ? <a href="<?= site_url('login') ?>">Se connecter</a></p>
+            </section>
         </div>
-    </div>
-</div>
+    </section>
+</main>
+
+<script>
+window.__inscriptionState = {
+    initialStep: <?= (int) $initialStep ?>,
+    imcValue: <?= json_encode($healthData['imc'] ?? null) ?>,
+    imcLabel: <?= json_encode($healthData['categorie'] ?? null) ?>
+};
+</script>
+<script src="<?= base_url('js/inscription.js') ?>"></script>
+</body>
+</html>
