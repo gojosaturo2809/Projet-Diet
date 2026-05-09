@@ -213,11 +213,16 @@ table.dt{width:100%;border-collapse:collapse;font-size:.86rem}
             <div class="ab">
                 <h2>Bon retour </h2>
                 <p>Connectez-vous à votre compte NutriPlan</p>
-                <div class="alert adang">Email ou mot de passe incorrect.</div>
                 <div class="fg"><label class="fl">Adresse email</label><input type="email" class="fc" placeholder="vous@exemple.com"></div>
+                <?php if (isset($errors['email'])): ?>
+                            <small style="color:var(--red-600);"><?php echo $errors['email']; ?></small>
+                        <?php endif; ?>
                 <div class="fg"><label class="fl">Mot de passe</label><input type="password" class="fc" placeholder="••••••••"></div>
+                <?php if (isset($errors['mot_de_passe'])): ?>
+                            <small style="color:var(--red-600);"><?php echo $errors['mot_de_passe']; ?></small>
+                        <?php endif; ?>
                 <div style="display:flex;justify-content:flex-end;margin:-.5rem 0 1rem"><a href="#" style="font-size:.8rem;color:var(--red-600)">Mot de passe oublié ?</a></div>
-                <button class="btn bp bfull blg">Se connecter</button>
+                <input type="submit" value="Se connecter" class="btn bp bfull blg">
                 <div class="dv"></div>
                 <p style="text-align:center;font-size:.85rem;color:var(--dark-500)">Pas encore de compte ? <a href="<?php echo base_url('inscription'); ?>" style="color:var(--red-600);font-weight:500">Créer un compte</a></p>
             </div>
