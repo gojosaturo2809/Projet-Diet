@@ -20,23 +20,27 @@ class ObjectifModel extends Model
     }
 
     /**
-     * Enregistre l'objectif choisi par l'utilisateur et désactive l'ancien choix actif.
+     * Enregistre l'objectif complet choisi par l'utilisateur.
      */
-    public function saveUserObjective(int $idUtilisateur, int $idObjectif): bool
+    public function saveUserObjective(int $idUtilisateur, int $idObjectif, float $poidsCible, int $dureeSemaine): bool
     {
-        $db = $this->db ?? \Config\Database::connect();
+        $db = \Config\Database::connect();
 
         $db->transStart();
 
+        // 1. Désactiver les anciens objectifs
         $db->table('objectifs_utilisateur')
             ->where('id_utilisateur', $idUtilisateur)
             ->update(['actif' => false]);
 
+        // 2. Insérer le nouvel objectif avec les détails quantifiables
         $db->table('objectifs_utilisateur')->insert([
-            'id_utilisateur' => $idUtilisateur,
-            'id_objectif'    => $idObjectif,
-            'date_debut'     => date('Y-m-d H:i:s'),
-            'actif'          => true,
+            'id_utilisateur'         => $idUtilisateur,
+            'id_objectif'            => $idObjectif,
+            'poids_cible'            => $poidsCible,
+            'duree_objectif_semaine' => $dureeSemaine,
+            'date_debut'             => date('Y-m-d H:i:s'),
+            'actif'                  => true,
         ]);
 
         $db->transComplete();
@@ -44,6 +48,9 @@ class ObjectifModel extends Model
         return $db->transStatus();
     }
 
+    /**
+     * Récupère l'objectif actuel avec les détails
+     */
     public function getObjectifActuel(int $idUtilisateur): ?array
     {
         return $this->db->table('objectifs_utilisateur')
@@ -51,7 +58,6 @@ class ObjectifModel extends Model
             ->join('objectifs', 'objectifs.id = objectifs_utilisateur.id_objectif')
             ->where('objectifs_utilisateur.id_utilisateur', $idUtilisateur)
             ->where('objectifs_utilisateur.actif', true)
-            ->orderBy('objectifs_utilisateur.id', 'DESC')
             ->get()
             ->getRowArray();
     }

@@ -1,253 +1,159 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NutriPlan — Design Preview</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-:root {
-    --red-50:#FEF0EF;--red-100:#FDD5D2;--red-200:#F9A49E;
-    --red-400:#E74C3C;--red-600:#C0392B;--red-800:#922B21;
-    --dark-100:#F5F5F3;--dark-200:#E8E6E1;--dark-300:#C9C6BF;
-    --dark-500:#6B6860;--dark-700:#2E2C28;--dark-900:#1A1917;
-    --white:#FFFFFF;--gold:#D4A017;--gold-light:#FAF0C8;
-    --font-d:'Playfair Display',serif;--font-b:'DM Sans',sans-serif;
-    --r-sm:6px;--r-md:12px;--r-lg:20px;--r-xl:32px;
-    --sh-sm:0 1px 3px rgba(0,0,0,.08);--sh-md:0 4px 16px rgba(0,0,0,.10);
-    --t:.22s cubic-bezier(.4,0,.2,1);
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{font-size:16px;scroll-behavior:smooth}
-body{font-family:var(--font-b);background:var(--dark-100);color:var(--dark-900);line-height:1.6}
-a{text-decoration:none;color:inherit}
-
-/* TAB SWITCHER */
-.preview-bar{position:sticky;top:0;z-index:200;background:var(--dark-900);display:flex;align-items:center;gap:0;padding:0 2rem;height:56px;border-bottom:1px solid rgba(255,255,255,.08)}
-.preview-brand{font-family:var(--font-d);font-size:1.1rem;color:white;font-weight:700;margin-right:2rem;}
-.preview-brand span{color:var(--red-400)}
-.tab-btn{padding:0 20px;height:56px;border:none;background:none;color:rgba(255,255,255,.5);font-family:var(--font-b);font-size:.85rem;font-weight:500;cursor:pointer;border-bottom:2px solid transparent;transition:all var(--t)}
-.tab-btn:hover{color:rgba(255,255,255,.8)}
-.tab-btn.active{color:white;border-bottom-color:var(--red-400)}
-.tab-panel{display:none}.tab-panel.active{display:block}
-
-/* ─── NAVBAR ─── */
-.navbar{display:flex;align-items:center;gap:2rem;padding:0 2.5rem;height:68px;background:var(--white);border-bottom:1.5px solid var(--dark-200);box-shadow:var(--sh-sm)}
-.nb-brand{display:flex;align-items:center;gap:8px;font-family:var(--font-d);font-size:1.45rem;font-weight:700;flex-shrink:0}
-.nb-brand .bi{color:var(--red-600)}.nb-brand .ba{color:var(--red-600)}
-.nb-nav{display:flex;list-style:none;gap:.25rem;flex:1}
-.nl{padding:6px 16px;border-radius:var(--r-sm);font-size:.88rem;font-weight:500;color:var(--dark-500);cursor:pointer;transition:all var(--t)}
-.nl:hover{background:var(--red-50);color:var(--red-600)}.nl.a{background:var(--red-600);color:white}
-.nb-right{display:flex;align-items:center;gap:12px;margin-left:auto}
-.wb{display:flex;align-items:center;gap:6px;background:var(--dark-100);border:1px solid var(--dark-200);padding:6px 14px;border-radius:50px;font-size:.82rem;font-weight:500}
-.gb{background:var(--gold-light);color:var(--gold);border:1px solid var(--gold);padding:4px 12px;border-radius:50px;font-size:.75rem;font-weight:600;letter-spacing:.05em}
-.ua{width:36px;height:36px;border-radius:50%;background:var(--red-600);color:white;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:600}
-.btn-lo{font-size:.82rem;color:var(--dark-500);padding:6px 12px;border-radius:var(--r-sm);border:1px solid var(--dark-200);cursor:pointer;transition:all var(--t)}
-.btn-lo:hover{border-color:var(--red-400);color:var(--red-600)}
-
-/* ─── AUTH ─── */
-.auth-layout{display:grid;grid-template-columns:1fr 1fr;min-height:calc(100vh - 56px)}
-.al{background:var(--red-600);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:4rem;color:white;position:relative;overflow:hidden}
-.al::before{content:'';position:absolute;width:400px;height:400px;border-radius:50%;border:80px solid rgba(255,255,255,.06);top:-100px;right:-100px}
-.al::after{content:'';position:absolute;width:300px;height:300px;border-radius:50%;border:60px solid rgba(255,255,255,.04);bottom:-80px;left:-60px}
-.al-inner{position:relative;z-index:1;max-width:380px}
-.bt{font-family:var(--font-d);font-size:2.8rem;font-weight:700;line-height:1.1;margin-bottom:1rem}
-.ar{background:white;display:flex;align-items:center;justify-content:center;padding:3rem}
-.ab{width:100%;max-width:420px}
-.ab h2{font-family:var(--font-d);font-size:1.7rem;font-weight:700;margin-bottom:6px}
-.ab p{color:var(--dark-500);margin-bottom:1.75rem}
-
-/* ─── FORMS ─── */
-.fg{margin-bottom:1.1rem}
-.fl{display:block;font-size:.83rem;font-weight:500;color:var(--dark-700);margin-bottom:5px}
-.fc{width:100%;padding:10px 15px;border-radius:var(--r-sm);border:1.5px solid var(--dark-200);font-family:var(--font-b);font-size:.88rem;color:var(--dark-900);background:white;transition:border-color var(--t),box-shadow var(--t);outline:none}
-.fc:focus{border-color:var(--red-400);box-shadow:0 0 0 3px var(--red-50)}
-.fc::placeholder{color:var(--dark-300)}
-.divider{height:1px;background:var(--dark-200);margin:1.25rem 0}
-
-/* ─── BUTTONS ─── */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 22px;border-radius:var(--r-sm);font-family:var(--font-b);font-size:.88rem;font-weight:500;border:1.5px solid transparent;cursor:pointer;transition:all var(--t);white-space:nowrap}
-.btn:active{transform:scale(.98)}
-.bp{background:var(--red-600);color:white;border-color:var(--red-600)}.bp:hover{background:var(--red-800)}
-.bo{background:transparent;color:var(--red-600);border-color:var(--red-600)}.bo:hover{background:var(--red-50)}
-.bg_{background:transparent;color:var(--dark-700);border-color:var(--dark-200)}.bg_:hover{background:var(--dark-100)}
-.bgold{background:var(--gold);color:white;border-color:var(--gold)}.bgold:hover{background:#B8860B}
-.bfull{width:100%}.blg{padding:14px 34px;font-size:.95rem;border-radius:var(--r-md)}.bsm{padding:7px 14px;font-size:.8rem}
-
-/* ─── CARD ─── */
-.card{background:white;border-radius:var(--r-lg);border:1px solid var(--dark-200);padding:1.75rem;box-shadow:var(--sh-sm)}
-.ct{font-family:var(--font-d);font-size:1.05rem;font-weight:600;color:var(--dark-900)}
-.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
-
-/* ─── STATS ─── */
-.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;margin-bottom:2rem}
-.sc{background:white;border-radius:var(--r-md);padding:1.5rem;border:1px solid var(--dark-200);position:relative;overflow:hidden}
-.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--red-600)}
-.sc.acc::before{background:var(--gold)}
-.sv{font-family:var(--font-d);font-size:2rem;font-weight:700;color:var(--dark-900);line-height:1;margin-bottom:4px}
-.sl{font-size:.78rem;color:var(--dark-500);font-weight:500;text-transform:uppercase;letter-spacing:.05em}
-.st{font-size:.78rem;font-weight:500;margin-top:6px}.stu{color:#27AE60}.std{color:var(--red-600)}
-
-/* ─── IMC CARD ─── */
-.imc{background:linear-gradient(135deg,var(--red-600) 0%,var(--red-800) 100%);color:white;border-radius:var(--r-xl);padding:2.5rem;position:relative;overflow:hidden}
-.imc::before{content:'';position:absolute;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.06);top:-40px;right:-40px}
-.imc::after{content:'';position:absolute;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.04);bottom:-60px;left:20px}
-.il{font-size:.78rem;font-weight:500;opacity:.8;text-transform:uppercase;letter-spacing:.08em}
-.iv{font-family:var(--font-d);font-size:3.8rem;font-weight:700;line-height:1;margin:12px 0 4px}
-.ic{font-size:1rem;opacity:.9}
-.isc{display:flex;height:8px;border-radius:4px;overflow:hidden;margin-top:1.25rem}
-.isc>div{flex:1}
-
-/* ─── REGIME CARD ─── */
-.rg{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
-.rc{background:white;border-radius:var(--r-lg);border:1.5px solid var(--dark-200);overflow:hidden;transition:all var(--t)}
-.rc:hover{border-color:var(--red-400);box-shadow:var(--sh-md);transform:translateY(-3px)}
-.rc-top{background:var(--red-50);padding:1.25rem 1.5rem;border-bottom:1px solid var(--dark-200)}
-.rc-name{font-family:var(--font-d);font-size:1rem;font-weight:600}
-.rc-price{font-family:var(--font-d);font-size:1.35rem;font-weight:700;color:var(--red-600)}
-.rc-body{padding:1.25rem 1.5rem}
-.mp{flex:1;text-align:center;padding:8px 4px;background:var(--dark-100);border-radius:var(--r-sm)}
-.mp .mv{font-size:.95rem;font-weight:700;color:var(--dark-900)}.mp .ml{font-size:.68rem;color:var(--dark-500)}
-
-/* ─── SIDEBAR ─── */
-.adm{display:grid;grid-template-columns:260px 1fr;min-height:calc(100vh - 56px)}
-.sb{background:var(--dark-900);color:white;display:flex;flex-direction:column;padding:1.5rem 0}
-.sb-logo{display:flex;align-items:center;gap:8px;padding:0 1.5rem 1.5rem;border-bottom:1px solid rgba(255,255,255,.08);font-family:var(--font-d);font-size:1.2rem;font-weight:700}
-.sb-tag{font-family:var(--font-b);font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;background:var(--red-600);color:white;padding:2px 8px;border-radius:4px;margin-left:auto}
-.sb-nav{flex:1;padding:.75rem;display:flex;flex-direction:column;gap:2px}
-.sb-sec{font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);padding:.9rem .75rem .35rem}
-.sb-lk{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:6px;font-size:.86rem;color:rgba(255,255,255,.6);cursor:pointer;transition:all var(--t)}
-.sb-lk:hover{background:rgba(255,255,255,.08);color:white}
-.sb-lk.a{background:var(--red-600);color:white;font-weight:500}
-.sb-ic{font-size:.85rem;color:var(--red-400)}.sb-lk.a .sb-ic{color:white}
-.mc{padding:2rem 2.5rem;overflow-y:auto}
-.pl{font-size:.76rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--red-600);margin-bottom:5px}
-.mc h1{font-family:var(--font-d);font-size:1.85rem;font-weight:700;line-height:1.2}
-
-/* ─── OBJECTIVES ─── */
-.og{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
-.oc{border:2px solid var(--dark-200);border-radius:var(--r-md);padding:1.5rem;text-align:center;cursor:pointer;transition:all var(--t)}
-.oc:hover,.oc.sel{border-color:var(--red-600);background:var(--red-50)}
-.oi{font-size:2rem;margin-bottom:8px}
-.on{font-weight:600;font-size:.88rem;color:var(--dark-900)}
-.od{font-size:.76rem;color:var(--dark-500);margin-top:3px}
-
-/* ─── GOLD BANNER ─── */
-.goldban{background:linear-gradient(135deg,#F5A623 0%,#D4860A 100%);border-radius:var(--r-lg);padding:1.75rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:2rem;color:white;margin-bottom:1.5rem}
-.goldban h3{font-family:var(--font-d);font-size:1.3rem;font-weight:700;margin-bottom:4px}
-.goldban p{opacity:.9;font-size:.87rem}
-
-/* ─── TABLE ─── */
-table.dt{width:100%;border-collapse:collapse;font-size:.86rem}
-.dt thead tr{border-bottom:2px solid var(--dark-200)}
-.dt th{padding:11px 15px;text-align:left;font-size:.73rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--dark-500)}
-.dt td{padding:13px 15px;border-bottom:1px solid var(--dark-100);color:var(--dark-700)}
-.dt tr:hover td{background:var(--red-50)}
-.dt tr:last-child td{border-bottom:none}
-
-/* ─── BADGES ─── */
-.bdr{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:.73rem;font-weight:600}
-.bdred{background:var(--red-50);color:var(--red-800)}.bdgreen{background:#EAFAF1;color:#1E8449}
-.bdgray{background:var(--dark-100);color:var(--dark-500)}.bdgold{background:var(--gold-light);color:#856404}
-
-/* ─── STEPS ─── */
-.steps{display:flex;align-items:center;margin-bottom:2rem}
-.step{display:flex;align-items:center;gap:8px;flex:1}
-.sd{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:600;border:2px solid var(--dark-200);color:var(--dark-500);background:white;flex-shrink:0;z-index:1}
-.step.done .sd{background:var(--red-600);border-color:var(--red-600);color:white}
-.step.act .sd{border-color:var(--red-600);color:var(--red-600);box-shadow:0 0 0 4px var(--red-50)}
-.sk{font-size:.8rem;font-weight:500;color:var(--dark-500)}
-.step.done .sk,.step.act .sk{color:var(--dark-900)}
-.sline{flex:1;height:2px;background:var(--dark-200);margin:0 8px}
-
-/* ─── ALERTS ─── */
-.alert{padding:11px 15px;border-radius:var(--r-sm);font-size:.86rem;margin-bottom:1rem;border-left:3px solid}
-.asucc{background:#EAFAF1;border-color:#2ECC71;color:#1E8449}
-.adang{background:var(--red-50);border-color:var(--red-600);color:var(--red-800)}
-.ainfo{background:#EBF5FB;border-color:#2E86C1;color:#1A5276}
-
-/* UTILS */
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.25rem}
-.fb{display:flex;align-items:center;justify-content:space-between}
-.mt1{margin-top:1rem}.mt2{margin-top:2rem}.mb1{margin-bottom:1rem}.mb2{margin-bottom:2rem}
-.tmu{color:var(--dark-500);font-size:.85rem}.tr{color:var(--red-600)}
-.dv{height:1px;background:var(--dark-200);margin:1.25rem 0}
-.fw{display:flex;gap:8px}
-.footer{background:var(--dark-900);color:rgba(255,255,255,.5)}
-.fi{max-width:1200px;margin:0 auto;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;font-size:.8rem}
-.fb_{color:white;font-weight:600}.fl_{display:flex;gap:1.5rem}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriPlan - Inscription</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="<?= base_url('css/inscription.css') ?>">
 </head>
 <body>
-<?php $errors = $errors ?? session()->getFlashdata('errors') ?? []; ?>
+<?php
+$healthData = is_array($healthData ?? null) ? $healthData : [];
+$errors = is_array($errors ?? null) ? $errors : [];
+$initialStep = ! empty($healthData) ? 2 : 1;
+$imcValue = isset($healthData['imc']) ? number_format((float) $healthData['imc'], 1, ',', ' ') : '—';
+$imcLabel = $healthData['categorie'] ?? 'Renseignez votre poids et votre taille pour calculer votre IMC.';
+$flashError = session()->getFlashdata('error');
+$flashSuccess = session()->getFlashdata('success');
+?>
+<main class="signup-shell">
+    <section class="signup-card">
+        <div class="brand-row">
+            <div class="brand">NutriPlan</div>
+        </div>
 
-<!-- BARRE DE NAVIGATION DES PREVIEWS -->
-<div class="preview-bar">
-    <div class="preview-brand">Nutri<span>Plan</span> — Design Preview</div>
-    <button class="tab-btn active" onclick="showTab('login')">Login</button>
-    <button class="tab-btn" onclick="showTab('register')">Inscription</button>
-    <button class="tab-btn" onclick="showTab('dashboard')">Dashboard User</button>
-    <button class="tab-btn" onclick="showTab('regimes')">Régimes</button>
-    <button class="tab-btn" onclick="showTab('admin')">Admin Panel</button>
-</div>
+        <div class="wizard-steps" data-wizard-steps>
+            <div class="wizard-step <?= $initialStep >= 1 ? 'is-active' : '' ?>" data-step-indicator="1">
+                <span>1</span>
+                <strong>Santé</strong>
+            </div>
+            <div class="wizard-line"></div>
+            <div class="wizard-step <?= $initialStep >= 2 ? 'is-active' : '' ?>" data-step-indicator="2">
+                <span>2</span>
+                <strong>Compte</strong>
+            </div>
+            <div class="wizard-line"></div>
+            <div class="wizard-step" data-step-indicator="3">
+                <span>3</span>
+                <strong>Objectif</strong>
+            </div>
+        </div>
 
+        <?php if ($flashError) : ?>
+            <div class="flash flash-error"><?= esc($flashError) ?></div>
+        <?php endif; ?>
 
-            <!-- Étape 1 : Informations personnelles -->
-            <div class="card">
-                <div class="ch">
-                    <span class="ct">Créer un compte</span>
-                    <span class="tmu">Étape 1 / 3</span>
+        <?php if ($flashSuccess) : ?>
+            <div class="flash flash-success"><?= esc($flashSuccess) ?></div>
+        <?php endif; ?>
+
+        <div class="wizard-panels">
+            <section class="wizard-panel <?= $initialStep === 1 ? 'is-visible' : '' ?>" data-panel="health">
+                <div class="panel-head center">
+                    <div>
+                        <p class="eyebrow">Étape 1 / 3</p>
+                        <h2>Informations de santé</h2>
+                    </div>
                 </div>
 
-                <form method="POST" action="<?php echo base_url('inscription/inscription'); ?>">
-                    <?php if (session()->getFlashdata('error')): ?>
-                        <div class="alert adang"><?php echo esc(session()->getFlashdata('error')); ?></div>
-                    <?php endif; ?>
-
-                    <!-- Nom -->
-                    <div class="fg">
-                        <label class="fl">Nom <span style="color:var(--red-600)">*</span></label>
-                        <input type="text" name="nom" class="fc" placeholder="Dupont" value="<?php echo old('nom'); ?>" required>
-                        <?php if (isset($errors['nom'])): ?>
-                            <small style="color:var(--red-600);"><?php echo $errors['nom']; ?></small>
-                        <?php endif; ?>
+                <form class="step-form" action="<?= site_url('inscription/sante') ?>" method="post" data-health-form>
+                    <div class="grid-two">
+                        <div class="field">
+                            <label for="poids">Poids (kg)</label>
+                            <input id="poids" name="poids" type="number" min="1" step="0.1" placeholder="65" value="<?= esc($healthData['poids'] ?? '') ?>" required>
+                            <small class="field-error" data-error-for="poids"></small>
+                        </div>
+                        <div class="field">
+                            <label for="taille">Taille (cm)</label>
+                            <input id="taille" name="taille" type="number" min="50" step="0.1" placeholder="170" value="<?= esc($healthData['taille'] ?? '') ?>" required>
+                            <small class="field-error" data-error-for="taille"></small>
+                        </div>
                     </div>
 
-                    <!-- Prénom -->
-                    <div class="fg">
-                        <label class="fl">Prénom <span style="color:var(--red-600)">*</span></label>
-                        <input type="text" name="prenom" class="fc" placeholder="Jean" value="<?php echo old('prenom'); ?>" required>
-                        <?php if (isset($errors['prenom'])): ?>
-                            <small style="color:var(--red-600);"><?php echo $errors['prenom']; ?></small>
-                        <?php endif; ?>
+                    <div class="imc-card" data-imc-card>
+                        <p class="imc-label">IMC calculé</p>
+                        <div class="imc-value" data-imc-value><?= esc($imcValue) ?></div>
+                        <p class="imc-caption" data-imc-caption><?= esc($imcLabel) ?></p>
                     </div>
 
-                    <!-- Email -->
-                    <div class="fg">
-                        <label class="fl">Adresse email <span style="color:var(--red-600)">*</span></label>
-                        <input type="email" name="email" class="fc" placeholder="vous@exemple.com" value="<?php echo old('email'); ?>" required>
-                        <?php if (isset($errors['email'])): ?>
-                            <small style="color:var(--red-600);"><?php echo $errors['email']; ?></small>
-                        <?php endif; ?>
+                    <div class="step-actions">
+                        <button type="submit" class="btn btn-primary">Continuer</button>
+                    </div>
+                    <div class="flash flash-error is-hidden" data-health-message></div>
+                </form>
+            </section>
+
+            <section class="wizard-panel <?= $initialStep === 2 ? 'is-visible' : '' ?>" data-panel="account">
+                <div class="panel-head center">
+                    <div>
+                        <p class="eyebrow">Étape 2 / 3</p>
+                        <h2>Informations personnelles</h2>
+                    </div>
+                </div>
+
+                <?php if (! empty($errors)) : ?>
+                    <div class="flash flash-error">
+                        <ul class="error-list">
+                            <?php foreach ($errors as $error) : ?>
+                                <li><?= esc($error) ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                <?php endif; ?>
+
+                <div class="health-summary">
+                    <span>Vos données santé sont enregistrées.</span>
+                    <strong><?= esc($imcLabel) ?> - IMC <?= esc($imcValue) ?></strong>
+                </div>
+
+                <form class="step-form" action="<?= site_url('inscription/inscription') ?>" method="post" data-account-form>
+                    <div class="grid-two">
+                        <div class="field">
+                            <label for="nom">Nom</label>
+                            <input id="nom" name="nom" type="text" placeholder="Dupont" value="<?= esc(old('nom')) ?>" required>
+                            <?php if (isset($errors['nom'])) : ?><small class="field-error visible"><?= esc($errors['nom']) ?></small><?php endif; ?>
+                        </div>
+                        <div class="field">
+                            <label for="prenom">Prénom</label>
+                            <input id="prenom" name="prenom" type="text" placeholder="Jean" value="<?= esc(old('prenom')) ?>" required>
+                            <?php if (isset($errors['prenom'])) : ?><small class="field-error visible"><?= esc($errors['prenom']) ?></small><?php endif; ?>
+                        </div>
                     </div>
 
-                    <!-- Mot de passe -->
-                    <div class="fg">
-                        <label class="fl">Mot de passe <span style="color:var(--red-600)">*</span></label>
-                        <input type="password" name="mot_de_passe" class="fc" placeholder="••••••••" required>
-                        <?php if (isset($errors['mot_de_passe'])): ?>
-                            <small style="color:var(--red-600);"><?php echo $errors['mot_de_passe']; ?></small>
-                        <?php endif; ?>
+                    <div class="field">
+                        <label for="email">Email</label>
+                        <input id="email" name="email" type="email" placeholder="vous@exemple.com" value="<?= esc(old('email')) ?>" required>
+                        <?php if (isset($errors['email'])) : ?><small class="field-error visible"><?= esc($errors['email']) ?></small><?php endif; ?>
                     </div>
 
-                    <div class="fw" style="justify-content:space-between;gap:1rem">
-                        <input type="submit" value="S'inscrire" class="btn bp bfull blg">
+                    <div class="field">
+                        <label for="mot_de_passe">Mot de passe</label>
+                        <input id="mot_de_passe" name="mot_de_passe" type="password" placeholder="••••••••" required>
+                        <?php if (isset($errors['mot_de_passe'])) : ?><small class="field-error visible"><?= esc($errors['mot_de_passe']) ?></small><?php endif; ?>
+                    </div>
+
+                    <div class="step-actions two-actions">
+                        <button type="button" class="btn btn-secondary" data-back-to-health>Retour</button>
+                        <button type="submit" class="btn btn-primary">Créer mon compte</button>
                     </div>
                 </form>
 
-                <p style="text-align:center;font-size:.85rem;color:var(--dark-500);margin-top:1rem">Vous avez déjà un compte ? <a href="#" style="color:var(--red-600);font-weight:500" onclick="showTab('login');return false">Se connecter</a></p>
-            </div>
+                <p class="login-link">Vous avez déjà un compte ? <a href="<?= site_url('login') ?>">Se connecter</a></p>
+            </section>
         </div>
-    </div>
-</div>
+    </section>
+</main>
+
+<script>
+window.__inscriptionState = {
+    initialStep: <?= (int) $initialStep ?>,
+    imcValue: <?= json_encode($healthData['imc'] ?? null) ?>,
+    imcLabel: <?= json_encode($healthData['categorie'] ?? null) ?>
+};
+</script>
+<script src="<?= base_url('js/inscription.js') ?>"></script>
+</body>
+</html>
