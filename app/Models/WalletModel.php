@@ -33,4 +33,34 @@ class WalletModel extends Model
     {
         return (bool) $this->update($userId, ['is_gold' => 1]);
     }
+    public function countCodes()
+{
+    return $this->db
+        ->table('code_recharge')
+        ->countAllResults();
+}
+public function getAllRechargeCodes()
+{
+    return $this->db
+        ->table('code_recharge')
+        ->select('code_recharge.*, utilisateur.email')
+
+        ->join(
+            'utilisateur',
+            'utilisateur.id = code_recharge.used_by',
+            'left'
+        )
+
+        ->orderBy('id', 'DESC')
+
+        ->get()
+
+        ->getResultArray();
+}
+public function createRechargeCode($data)
+{
+    return $this->db
+        ->table('code_recharge')
+        ->insert($data);
+}
 }

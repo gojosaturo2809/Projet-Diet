@@ -106,5 +106,14 @@ class Filters extends BaseFilters
      *
      * @var array<string, array<string, list<string>>>
      */
-    public array $filters = [];
+    
+    public array $filters = [
+
+    'csrf'          => \CodeIgniter\Filters\CSRF::class,
+    'toolbar'       => \CodeIgniter\Filters\DebugToolbar::class,
+
+    'auth'          => \App\Filters\AuthFilter::class,
+
+    'admin'         => \App\Filters\AdminFilter::class,
+];
 }

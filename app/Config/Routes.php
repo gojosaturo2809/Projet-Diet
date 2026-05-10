@@ -9,7 +9,9 @@ $routes->get('/', 'Login::index');
 $routes->get('/login', 'Login::index');
 $routes->post('/login', 'Login::login');
 $routes->post('/login/login', 'Login::login');
-$routes->get('/dashboard', 'Dashboard::index');
+$routes->get('/dashboard',
+    'Dashboard::index'
+);
 $routes->get('/logout', 'Login::logout');
 $routes->get('/inscription', 'Inscription::index');
 $routes->post('/inscription/inscription', 'Inscription::inscription');
@@ -48,3 +50,55 @@ $routes->get('regimes', 'RegimeController::index');
 $routes->get('regimes/print', 'RegimeController::printable');
 $routes->get('regimes/download-pdf', 'RegimeController::downloadPdf');
 $routes->post('regimes/souscrire', 'RegimeController::souscrire');
+
+/*
+|--------------------------------------------------------------------------
+| ADMIN ROUTES
+|--------------------------------------------------------------------------
+*/
+
+$routes->group('admin', static function ($routes) {
+
+    /*
+    |--------------------------------------------------------------------------
+    | DASHBOARD
+    |--------------------------------------------------------------------------
+    */
+
+    $routes->get('/', 'Admin\DashboardAdmin::index');
+
+    /*
+    |--------------------------------------------------------------------------
+    | REGIMES
+    |--------------------------------------------------------------------------
+    */
+
+    $routes->get('regimes', 'Admin\RegimeAdmin::index');
+
+    $routes->get('regimes/create',
+        'Admin\RegimeAdmin::create');
+
+    $routes->post('regimes/store',
+        'Admin\RegimeAdmin::store');
+
+    $routes->get('regimes/delete/(:num)',
+        'Admin\RegimeAdmin::delete/$1');
+
+    /*
+    |--------------------------------------------------------------------------
+    | CODES RECHARGE
+    |--------------------------------------------------------------------------
+    */
+
+    $routes->get('codes',
+        'Admin\WalletCodeAdmin::index');
+
+    $routes->get('codes/create',
+        'Admin\WalletCodeAdmin::create');
+
+    $routes->post('codes/store',
+        'Admin\WalletCodeAdmin::store');
+
+
+
+});
