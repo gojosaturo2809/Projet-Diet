@@ -44,4 +44,8 @@ class LoginModel extends Model
 
         return false;
     }
+    public function countUsers()
+{
+    return $this->countAllResults();
+}
 }

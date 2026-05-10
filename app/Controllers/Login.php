@@ -17,20 +17,35 @@ class Login extends BaseController
 
             $user = $model->authenticate($data['email'] ?? '', $data['mot_de_passe'] ?? '');
 
-            if ($user) {
-                session()->set([
-                    'user_id'         => $user['id'],
-                    'id_utilisateur'  => $user['id'],
-                    'user_email'      => $user['email'],
-                    'user_nom'        => $user['nom'],
-                    'user_prenom'     => $user['prenom'],
-                    'email'           => $user['email'],
-                    'nom'             => $user['nom'],
-                    'prenom'          => $user['prenom'],
-                ]);
+          if ($user) {
 
-                return redirect()->to('/dashboard')->with('success', 'Connexion réussie !');
-            }
+    session()->set([
+
+        'user_id' => $user['id'],
+
+        'user_email' => $user['email'],
+
+        'user_nom' => $user['nom'],
+
+        'user_prenom' => $user['prenom'],
+
+        'role' => $user['role'],
+    ]);
+
+    /*
+    |--------------------------------------------------------------------------
+    | REDIRECTION ADMIN
+    |--------------------------------------------------------------------------
+    */
+
+    if ($user['role'] === 'admin') {
+
+        return redirect()->to('/admin')->with('success', 'Connexion réussie en tant qu\'administrateur');
+    }
+
+    return redirect()->to('/dashboard');
+}
+            
 
             return redirect()->back()->with('error', 'Email ou mot de passe incorrect');
         } catch (\Exception $e) {

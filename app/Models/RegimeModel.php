@@ -26,6 +26,22 @@ class RegimeModel extends Model
             ->get()
             ->getRowArray();
     }
+    public function countRegimes()
+{
+    return $this->db
+        ->table('regimes')
+        ->countAllResults();
+}
+public function getTotalRevenue()
+{
+    $result = $this->db
+        ->table('achats_regime')
+        ->selectSum('montant_total')
+        ->get()
+        ->getRow();
+
+    return $result->montant_total ?? 0;
+}
 
     /**
      * Récupère le sport associé à l'intensité du régime choisi

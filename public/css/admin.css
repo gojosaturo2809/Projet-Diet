@@ -1,0 +1,376 @@
+/* =========================
+   GLOBAL
+=========================*/
+body{
+    margin:0;
+    font-family:var(--font-s);
+    background:#f4f2f1;
+    color:#1f1f1f;
+}
+
+
+/* =========================
+   SIDEBAR
+=========================*/
+.admin-sidebar{
+    position:fixed;
+    left:0;
+    top:62px;
+    width:250px;
+    height:calc(100vh - 62px);
+    background:#121212;
+    color:white;
+    display:flex;
+    flex-direction:column;
+    border-right:1px solid rgba(255,255,255,.05);
+}
+
+/* Logo */
+.admin-brand{
+    padding:28px 24px;
+    font-family:var(--font-d);
+    font-size:30px;
+    font-weight:700;
+    border-bottom:1px solid rgba(255,255,255,.06);
+}
+
+.admin-brand span{
+    color:#d64534;
+}
+
+/* Sections */
+.menu-title{
+    color:#6f6f6f;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    margin:26px 24px 12px;
+    font-weight:700;
+}
+
+/* Menu */
+.admin-menu{
+    padding:0 14px;
+}
+
+.admin-menu a{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:13px 16px;
+    border-radius:12px;
+    color:#b8b8b8;
+    text-decoration:none;
+    margin-bottom:6px;
+    font-size:15px;
+    transition:.2s;
+}
+
+.admin-menu a:hover{
+    background:#242424;
+    color:white;
+}
+
+.admin-menu a.active{
+    background:#c73b2d;
+    color:white;
+    box-shadow:0 8px 20px rgba(199,59,45,.25);
+}
+
+/* User box */
+.admin-user{
+    margin-top:auto;
+    padding:20px;
+    border-top:1px solid rgba(255,255,255,.06);
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.admin-user-avatar{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:#d64534;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+}
+
+.admin-user small{
+    color:#888;
+    display:block;
+    margin-top:2px;
+}
+
+/* =========================
+   CONTENT
+=========================*/
+.admin-content{
+    margin-left:250px;
+    margin-top:62px;
+    padding:34px;
+}
+
+/* Page title */
+.page-label{
+    color:#b05d52;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    font-size:12px;
+    font-weight:700;
+    margin-bottom:10px;
+}
+
+.page-title{
+    font-family:var(--font-d);
+    font-size:48px;
+    margin:0;
+    margin-bottom:30px;
+    font-weight:700;
+}
+
+/* =========================
+   KPI GRID
+=========================*/
+.kpi-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:22px;
+    margin-bottom:28px;
+}
+
+.kpi-card{
+    background:white;
+    border-radius:24px;
+    padding:28px;
+    border-top:4px solid #c63b2d;
+    box-shadow:
+        0 2px 6px rgba(0,0,0,.03),
+        0 14px 30px rgba(0,0,0,.04);
+    transition:.25s;
+}
+
+.kpi-card:hover{
+    transform:translateY(-4px);
+}
+
+.kpi-card h2{
+    font-family:var(--font-d);
+    font-size:42px;
+    margin:0;
+    color:#181818;
+}
+
+.kpi-card p{
+    margin:4px 0 0;
+    color:#777;
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+}
+
+.kpi-card .kpi-growth{
+    margin-top:14px;
+    color:#35a067;
+    font-size:14px;
+    font-weight:600;
+}
+
+/* =========================
+   CARDS
+=========================*/
+.table-card,
+.chart-card,
+.form-card{
+    background:white;
+    border-radius:28px;
+    padding:28px;
+    box-shadow:
+        0 2px 6px rgba(0,0,0,.03),
+        0 14px 30px rgba(0,0,0,.04);
+    margin-top:24px;
+}
+
+.table-card h3,
+.chart-card h3{
+    font-family:var(--font-d);
+    font-size:32px;
+    margin-top:0;
+    margin-bottom:24px;
+}
+
+/* =========================
+   TABLE
+=========================*/
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    text-align:left;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:#8a8a8a;
+    padding:18px 12px;
+    border-bottom:1px solid #ececec;
+}
+
+td{
+    padding:20px 12px;
+    border-bottom:1px solid #f1f1f1;
+    font-size:15px;
+}
+
+tr:hover{
+    background:#faf8f7;
+}
+
+/* Badge */
+.badge{
+    display:inline-block;
+    padding:6px 12px;
+    border-radius:999px;
+    background:#f8ece9;
+    color:#b24536;
+    font-size:13px;
+    font-weight:600;
+}
+
+/* =========================
+   BUTTONS
+=========================*/
+.btn{
+    background:#c63b2d;
+    color:white;
+    padding:10px 18px;
+    border-radius:12px;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:600;
+    border:none;
+    cursor:pointer;
+    transition:.2s;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+}
+
+.btn:hover{
+    background:#ab3125;
+    transform:translateY(-1px);
+}
+
+.btn-outline{
+    background:#fff;
+    color:#444;
+    border:1px solid #e6e6e6;
+}
+
+.btn-outline:hover{
+    background:#f7f7f7;
+}
+
+/* =========================
+   FORMS
+=========================*/
+form{
+    background:white;
+    padding:30px;
+    border-radius:28px;
+    box-shadow:
+        0 2px 6px rgba(0,0,0,.03),
+        0 14px 30px rgba(0,0,0,.04);
+    max-width:700px;
+}
+
+label{
+    display:block;
+    margin-bottom:8px;
+    font-size:14px;
+    font-weight:600;
+    color:#555;
+}
+
+input,
+textarea,
+select{
+    width:100%;
+    padding:14px 16px;
+    margin-bottom:18px;
+    border:1px solid #ececec;
+    border-radius:14px;
+    outline:none;
+    font-size:14px;
+    background:#fafafa;
+    transition:.2s;
+    box-sizing:border-box;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+    border-color:#c63b2d;
+    background:white;
+    box-shadow:0 0 0 4px rgba(198,59,45,.08);
+}
+
+button{
+    background:#c63b2d;
+    color:white;
+    padding:12px 18px;
+    border:none;
+    border-radius:14px;
+    cursor:pointer;
+    font-weight:600;
+    transition:.2s;
+}
+
+button:hover{
+    background:#ab3125;
+}
+
+/* =========================
+   RESPONSIVE
+=========================*/
+@media(max-width:1200px){
+    .kpi-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:900px){
+
+    .admin-sidebar{
+        width:88px;
+    }
+
+    .admin-content{
+        margin-left:88px;
+    }
+
+    .admin-menu a span,
+    .menu-title,
+    .admin-user div{
+        display:none;
+    }
+}
+
+@media(max-width:700px){
+
+    .kpi-grid{
+        grid-template-columns:1fr;
+    }
+
+    .admin-content{
+        padding:18px;
+    }
+
+    .page-title{
+        font-size:36px;
+    }
+}

@@ -1,9 +1,9 @@
-</main>
+
 <footer class="footer">
     <div class="fi">
         <span>NutriPlan</span>
         <span>© 2026 - Tous droits reserves</span>
-        <?php echo password_hash("admin123", PASSWORD_BCRYPT); ?>
+        
     </div>
 </footer>
 </body>
