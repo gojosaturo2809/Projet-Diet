@@ -20,6 +20,9 @@
             ['key' => 'wallet', 'label' => 'Portefeuille', 'href' => base_url('wallet')],
             ['key' => 'recharge', 'label' => 'Recharger', 'href' => base_url('wallet/recharge')],
             ['key' => 'gold', 'label' => 'Option Gold', 'href' => base_url('gold')],
+            ['key' => 'regimes', 'label' => 'Régimes', 'href' => base_url('regimes')],
+       
+
         ];
         $links = $navLinks ?? $defaultLinks;
         ?>

@@ -1,0 +1,190 @@
+/* =========================
+   REGIMES PAGE
+========================= */
+
+.regimes-section{
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+}
+
+/* HEADER */
+
+.regimes-header{
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.regimes-header h1{
+    font-size: 2.5rem;
+    color: #1F2937;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.regimes-header p{
+    color: #6B7280;
+    font-size: 1.1rem;
+}
+
+/* GRID */
+
+.regimes-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+}
+
+/* CARD */
+
+.regime-card{
+    position: relative;
+    overflow: hidden;
+    border: 2px solid #E5E7EB;
+    background: #FFFFFF;
+    border-radius: 16px;
+    transition: 0.3s;
+}
+
+.regime-card:hover{
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+/* POPULAR */
+
+.popular-badge{
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: #E74C3C;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+/* ICON */
+
+.regime-icon{
+    font-size: 3rem;
+    text-align: center;
+    padding: 2rem;
+    background: #F9FAFB;
+    border-bottom: 2px solid #E5E7EB;
+}
+
+/* CONTENT */
+
+.regime-content{
+    padding: 1.5rem;
+}
+
+.regime-content h3{
+    margin-bottom: 0.5rem;
+    color: #111827;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.regime-description{
+    color: #6B7280;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+/* NUTRITION */
+
+.nutrition-box{
+    background: #F3F4F6;
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+
+    display: flex;
+    justify-content: space-around;
+    gap: 1rem;
+}
+
+.nutrition-item{
+    text-align: center;
+}
+
+.nutrition-value{
+    font-weight: 700;
+    color: #111827;
+    font-size: 1.2rem;
+}
+
+.nutrition-label{
+    font-size: 0.85rem;
+    color: #6B7280;
+}
+
+/* FOOTER */
+
+.regime-footer{
+    padding-top: 1rem;
+    border-top: 1px solid #E5E7EB;
+}
+
+/* PRICE */
+
+.price-box{
+    margin-bottom: 1rem;
+}
+
+.price-label{
+    font-size: 0.85rem;
+    color: #6B7280;
+}
+
+.price{
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+/* FORM */
+
+.subscribe-form{
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.weeks-input-box{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.weeks-input{
+    flex: 1;
+    padding: 0.7rem;
+    border: 1px solid #D1D5DB;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    outline: none;
+}
+
+.weeks-input:focus{
+    border-color: #E74C3C;
+}
+
+/* BUTTON */
+
+.subscribe-btn{
+    padding: 0.85rem 1.5rem;
+    background: #E74C3C;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.subscribe-btn:hover{
+    background: #cf3f31;
+}

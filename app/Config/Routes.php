@@ -43,7 +43,8 @@ $routes->group('objectifs', static function ($routes) {
     $routes->post('selectionner', 'ObjectifController::selectionner');
 });
 
-// Régimes: impression et souscription
+// RÃƒÂ©gimes: impression et souscription
+$routes->get('regimes', 'RegimeController::index');
 $routes->get('regimes/print', 'RegimeController::printable');
 $routes->get('regimes/download-pdf', 'RegimeController::downloadPdf');
 $routes->post('regimes/souscrire', 'RegimeController::souscrire');

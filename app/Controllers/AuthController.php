@@ -45,8 +45,9 @@ class AuthController extends BaseController
 
             if (! $reg) {
         if ($this->request->getMethod() === 'POST') {
-                    ->with('errors', ["Vous devez d'abord remplir les informations personnelles."]);
+                    return redirect()->back()->with('errors', ["Vous devez d'abord remplir les informations personnelles."]);
             }
+        }
 
             $poids = $this->request->getPost('poids');
             $taille = $this->request->getPost('taille');
