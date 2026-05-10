@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 use App\Models\InfoSanteModel;
 use App\Models\WalletModel;
+use App\Models\ObjectifModel;
+use App\Models\RegimeModel;
 
 class Dashboard extends BaseController
 {
@@ -32,6 +34,40 @@ class Dashboard extends BaseController
         $fullName = trim($prenom . ' ' . $nom);
         $initials = strtoupper(substr($prenom, 0, 1) . substr($nom, 0, 1));
 
+        // Suggestion de régime (dynamique)
+        $activeRegime = null;
+        $objectifModel = new ObjectifModel();
+        $regimeModel = new RegimeModel();
+
+        $objectifActuel = $objectifModel->getObjectifActuel($userId);
+        if ($objectifActuel && $latestHealth) {
+            $deltaPoids = $objectifActuel['poids_cible'] - $latestHealth['poids'];
+            $vitesseRequise = $deltaPoids / max(1, (int) $objectifActuel['duree_objectif_semaine']);
+            $sugg = $regimeModel->suggererRegime($vitesseRequise);
+            if ($sugg) {
+                $totalSemaines = (int) $objectifActuel['duree_objectif_semaine'];
+                $activeRegime = [
+                    'nom' => $sugg['nom'] ?? '—',
+                    'subtitle' => 'Durée : ' . $totalSemaines . ' semaines — ' . (floatval($sugg['variation_poids_hebdo']) < 0 ? 'Réduction de poids' : 'Prise de poids'),
+                    'pourcentage_viande' => $sugg['pourcentage_viande'] ?? 0,
+                    'pourcentage_poisson' => $sugg['pourcentage_poisson'] ?? 0,
+                    'pourcentage_volaille' => $sugg['pourcentage_volaille'] ?? 0,
+                    'progress' => 0,
+                    'semaine_actuelle' => 1,
+                    'total_semaines' => $totalSemaines,
+                ];
+            }
+        }
+
+        // Liste de tous les régimes disponibles (pour que l'utilisateur choisisse)
+        $regimesList = $regimeModel->getAllWithComposition();
+        // Ajouter un sport suggéré par régime
+        foreach ($regimesList as &$rItem) {
+            $rItem['suggested_sport'] = $regimeModel->getSportSuggere((float) ($rItem['variation_poids_hebdo'] ?? 0));
+        }
+        unset($rItem);
+        $userWeeks = (int) ($objectifActuel['duree_objectif_semaine'] ?? 4);
+
         return view('dashboard', [
             'user' => [
                 'nom' => $nom,
@@ -56,6 +92,9 @@ class Dashboard extends BaseController
             'objectifNom' => (string) session('objectif_nom'),
             'objectifId' => (int) (session('objectif_id') ?? 0),
             'badgeGold' => (bool) session('is_gold'),
+            'activeRegime' => $activeRegime,
+            'regimesList' => $regimesList,
+            'regime_weeks' => $userWeeks,
         ]);
     }
 }

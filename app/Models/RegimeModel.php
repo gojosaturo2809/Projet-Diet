@@ -45,4 +45,18 @@ class RegimeModel extends Model
             ->get()
             ->getRowArray();
     }
+
+    /**
+     * Retourne tous les régimes (optionnellement filtrés par critères simples)
+     * Ici on renvoie la composition jointe si présente.
+     */
+    public function getAllWithComposition(): array
+    {
+        return $this->db->table($this->table)
+            ->select('regimes.*, regime_composition.pourcentage_viande, regime_composition.pourcentage_poisson, regime_composition.pourcentage_volaille')
+            ->join('regime_composition', 'regimes.id = regime_composition.id_regime', 'left')
+            ->orderBy('regimes.id', 'ASC')
+            ->get()
+            ->getResult('array');
+    }
 }
