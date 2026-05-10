@@ -10,29 +10,65 @@ use App\Models\WalletModel;
 
 class RegimeController extends BaseController
 {
-    public function suggestion()
+     public function index()
     {
-        // 1. Récupération de l'utilisateur en session
+        $userId = (int) (session()->get("user_id") ?? 0);
+        if ($userId <= 0) {
+            return redirect()->to(site_url("login"));
+        }
+        
+        $regimeModel = new RegimeModel();
+        $walletModel = new WalletModel();
+        $objectifModel = new ObjectifModel();
+        
+        $regimes = $regimeModel->getAllWithComposition();
+        $solde = $walletModel->getSoldeUtilisateur($userId);
+        $userObjectif = $objectifModel->getObjectifActuel($userId);
+        $userWeeks = ($userObjectif["duree_objectif_semaine"] ?? 4);
+        
+        $session = session();
+        $userName = $session->get("user_nom") ?? "";
+        $userPrenom = $session->get("user_prenom") ?? "";
+        $initials = substr($userName, 0, 1) . substr($userPrenom, 0, 1);
+        
+        $navLinks = [
+            ["key" => "dashboard", "label" => "Dashboard", "href" => base_url("dashboard")],
+            ["key" => "regimes", "label" => "Regimes", "href" => base_url("regimes")],
+            ["key" => "wallet", "label" => "Portefeuille", "href" => base_url("wallet")],
+        ];
+        
+        return view("regimes", [
+            "regimesList" => $regimes,
+            "regime_weeks" => $userWeeks,
+            "solde" => $solde,
+            "isGoldUser" => (bool) $session->get("is_gold"),
+            "initials" => $initials ?: "NP",
+            "navLinks" => $navLinks,
+        ]);
+    }
+      public function suggestion()
+    {
+        // 1. RÃ©cupÃ©ration de l'utilisateur en session
         $idUtilisateur = (int) (session()->get('id_utilisateur') ?? session()->get('user_id') ?? 0);
 
         if ($idUtilisateur <= 0) {
             return redirect()->to(site_url('login'))->with('error', 'Veuillez vous connecter.');
         }
 
-        // 2. Instanciation des modèles
+        // 2. Instanciation des modÃ¨les
         $objectifModel = new ObjectifModel();
         $regimeModel   = new RegimeModel();
         $healthModel   = new HealthModel();
 
-        // 3. Récupération des données nécessaires au calcul
+        // 3. RÃ©cupÃ©ration des donnÃ©es nÃ©cessaires au calcul
         $objectif = $objectifModel->getObjectifActuel($idUtilisateur);
         $sante    = $healthModel->where('id_utilisateur', $idUtilisateur)->first();
 
         if (!$objectif || !$sante) {
-            return redirect()->to(site_url('objectifs'))->with('error', 'Veuillez définir votre profil et objectif d\'abord.');
+            return redirect()->to(site_url('objectifs'))->with('error', 'Veuillez dÃ©finir votre profil et objectif d\'abord.');
         }
 
-        // --- LOGIQUE MATHÉMATIQUE DE SUGGESTION ---
+        // --- LOGIQUE MATHÃ‰MATIQUE DE SUGGESTION ---
 
         // Calcul du Delta de poids (ex: 70kg cible - 80kg actuel = -10kg)
         $deltaPoids = $objectif['poids_cible'] - $sante['poids'];
@@ -40,7 +76,7 @@ class RegimeController extends BaseController
         // Calcul de la vitesse requise par semaine (ex: -10kg / 8 semaines = -1.25kg/semaine)
         $vitesseRequise = $deltaPoids / $objectif['duree_objectif_semaine'];
 
-        // 4. Appel de l'algorithme dans le modèle
+        // 4. Appel de l'algorithme dans le modÃ¨le
         $regimeSuggere = $regimeModel->suggererRegime($vitesseRequise);
 
         if (!$regimeSuggere) {
@@ -54,14 +90,14 @@ class RegimeController extends BaseController
         // Simulation Remise Gold (si vous avez un champ 'type_compte' dans votre session)
         $remise = 0;
         if (session()->get('user_gold')) {
-            $remise = $prixTotal * 0.15; // 15% de réduction
+            $remise = $prixTotal * 0.15; // 15% de rÃ©duction
             $prixTotal -= $remise;
         }
 
-        // 6. Récupération du sport adapté à l'intensité
+        // 6. RÃ©cupÃ©ration du sport adaptÃ© Ã  l'intensitÃ©
         $sport = $regimeModel->getSportSuggere($regimeSuggere['variation_poids_hebdo']);
 
-        // 7. Envoi à la vue
+        // 7. Envoi Ã  la vue
         return view('regimes/suggestion_view', [
             'regime'      => $regimeSuggere,
             'objectif'    => $objectif,
@@ -74,7 +110,7 @@ class RegimeController extends BaseController
     }
 
     /**
-     * Traitement d'abonnement / achat de régime simple (débite le portefeuille)
+     * Traitement d'abonnement / achat de rÃ©gime simple (dÃ©bite le portefeuille)
      */
     public function souscrire()
     {
@@ -92,7 +128,7 @@ class RegimeController extends BaseController
 
         $regime = $regimeModel->find($regimeId);
         if (!$regime) {
-            return redirect()->back()->with('error', 'Régime introuvable.');
+            return redirect()->back()->with('error', 'RÃ©gime introuvable.');
         }
 
         $jours = $semaines * 7;
@@ -102,7 +138,7 @@ class RegimeController extends BaseController
         $prixTotal = $prixBase;
         
         if ($isGold) {
-            $remise = $prixBase * 0.15; // 15% de réduction
+            $remise = $prixBase * 0.15; // 15% de rÃ©duction
             $prixTotal = $prixBase - $remise;
         }
 
@@ -111,7 +147,7 @@ class RegimeController extends BaseController
             return redirect()->back()->with('error', 'Solde insuffisant. Veuillez recharger votre portefeuille.');
         }
 
-        // Débiter le portefeuille (montant négatif)
+        // DÃ©biter le portefeuille (montant nÃ©gatif)
         $walletSuccess = $walletModel->modifierSolde($userId, -$prixTotal);
 
         if (! $walletSuccess) {
@@ -122,12 +158,12 @@ class RegimeController extends BaseController
         $achatSuccess = $achatModel->recordAchat($userId, $regimeId, round($prixTotal, 2), round($remise, 2), $semaines);
 
         if (! $achatSuccess) {
-            return redirect()->back()->with('error', 'Achat débité mais non enregistré. Contactez le support.');
+            return redirect()->back()->with('error', 'Achat dÃ©bitÃ© mais non enregistrÃ©. Contactez le support.');
         }
 
-        // Message de succès avec détails
+        // Message de succÃ¨s avec dÃ©tails
         $montantStr = number_format($prixTotal, 0, ',', ' ') . ' Ar';
-        $msg = 'Achat confirmé — ' . $montantStr;
+        $msg = 'Achat confirmÃ© â€” ' . $montantStr;
         if ($remise > 0) {
             $msg .= ' (Remise Gold: ' . number_format($remise, 0, ',', ' ') . ' Ar)';
         }
@@ -137,7 +173,7 @@ class RegimeController extends BaseController
     }
 
     /**
-     * Vue imprimable pour un régime ou la liste (utiliser Print->Save as PDF)
+     * Vue imprimable pour un rÃ©gime ou la liste (utiliser Print->Save as PDF)
      */
     public function printable()
     {
@@ -149,7 +185,7 @@ class RegimeController extends BaseController
         if ($regimeId > 0) {
             $regime = $regimeModel->find($regimeId);
             if (! $regime) {
-                return redirect()->back()->with('error', 'Régime introuvable.');
+                return redirect()->back()->with('error', 'RÃ©gime introuvable.');
             }
             return view('regimes/printable', ['regimes' => [$regime], 'semaines' => $weeks, 'isGold' => (bool) session('is_gold')]);
         }
@@ -159,8 +195,8 @@ class RegimeController extends BaseController
     }
 
     /**
-     * Télécharger le PDF d'un régime ou la liste complète
-     * Génère un fichier PDF optimisé (HTML+CSS pour navigateur)
+     * TÃ©lÃ©charger le PDF d'un rÃ©gime ou la liste complÃ¨te
+     * GÃ©nÃ¨re un fichier PDF optimisÃ© (HTML+CSS pour navigateur)
      */
     public function downloadPdf()
     {
@@ -172,14 +208,14 @@ class RegimeController extends BaseController
             if ($regimeId > 0) {
                 $regime = $regimeModel->find($regimeId);
                 if (!$regime) {
-                    return redirect()->back()->with('error', 'Régime introuvable.');
+                    return redirect()->back()->with('error', 'RÃ©gime introuvable.');
                 }
                 $regimes = [$regime];
             } else {
                 $regimes = $regimeModel->getAllWithComposition();
             }
 
-            // Récupérer le statut gold (avec fallback si session non disponible)
+            // RÃ©cupÃ©rer le statut gold (avec fallback si session non disponible)
             $isGold = false;
             try {
                 $isGold = (bool) session('is_gold');
@@ -187,10 +223,10 @@ class RegimeController extends BaseController
                 $isGold = false;
             }
 
-            // Générer le contenu HTML optimisé pour PDF
+            // GÃ©nÃ©rer le contenu HTML optimisÃ© pour PDF
             $html = $this->generatePdfHtml($regimes, $weeks, $isGold);
 
-            // Retourner comme réponse avec header de téléchargement
+            // Retourner comme rÃ©ponse avec header de tÃ©lÃ©chargement
             $filename = 'regimes-nutriplan-' . date('Y-m-d-His') . '.html';
             return $this->response
                 ->setContentType('text/html; charset=utf-8')
@@ -198,18 +234,18 @@ class RegimeController extends BaseController
                 ->setBody($html);
         } catch (\Exception $e) {
             log_message('error', 'Error in downloadPdf: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Erreur lors de la génération du PDF.');
+            return redirect()->back()->with('error', 'Erreur lors de la gÃ©nÃ©ration du PDF.');
         }
     }
 
     /**
-     * Helper: Générer le HTML optimisé pour impression PDF
+     * Helper: GÃ©nÃ©rer le HTML optimisÃ© pour impression PDF
      */
     private function generatePdfHtml(array $regimes, int $weeks, bool $isGold = false): string
     {
         $html = '<!DOCTYPE html><html lang="fr"><head>';
         $html .= '<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">';
-        $html .= '<title>NutriPlan - Export Régimes</title>';
+        $html .= '<title>NutriPlan - Export RÃ©gimes</title>';
         $html .= '<style>
             body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; color: #1a1a1a; line-height: 1.6; margin: 0; padding: 20px; }
             @page { margin: 20mm; size: A4; }
@@ -237,7 +273,7 @@ class RegimeController extends BaseController
 
         $html .= '<div class="header">';
         $html .= '<h1>NutriPlan</h1>';
-        $html .= '<p>Programme de régimes personnalisés — Export du ' . date('d/m/Y H:i') . '</p>';
+        $html .= '<p>Programme de rÃ©gimes personnalisÃ©s â€” Export du ' . date('d/m/Y H:i') . '</p>';
         $html .= '</div>';
 
         $html .= '<div class="no-print"><button onclick="window.print()">Imprimer / Enregistrer en PDF</button></div>';
@@ -250,7 +286,7 @@ class RegimeController extends BaseController
             $prixFinal = $prixBase - $remise;
 
             $html .= '<div class="regime-card">';
-            $html .= '<h2>' . htmlspecialchars($r['nom'] ?? '—') . '</h2>';
+            $html .= '<h2>' . htmlspecialchars($r['nom'] ?? 'â€”') . '</h2>';
             $html .= '<p>' . htmlspecialchars($r['description'] ?? '') . '</p>';
 
             $html .= '<div class="composition">';
@@ -261,7 +297,7 @@ class RegimeController extends BaseController
 
             $html .= '<div class="pricing">';
             $html .= '<div class="price-row"><span class="price-label">Prix journalier</span><span class="price-value">' . number_format($prixJour, 0, ',', ' ') . ' Ar</span></div>';
-            $html .= '<div class="price-row"><span class="price-label">Durée</span><span class="price-value">' . (int) $weeks . ' semaines</span></div>';
+            $html .= '<div class="price-row"><span class="price-label">DurÃ©e</span><span class="price-value">' . (int) $weeks . ' semaines</span></div>';
             $html .= '<div class="price-row"><span class="price-label">Prix total (base)</span><span class="price-value">' . number_format($prixBase, 0, ',', ' ') . ' Ar</span></div>';
             if ($remise > 0) {
                 $html .= '<div class="price-row discount"><span class="price-label">Remise Gold (15%)</span><span class="price-value">-' . number_format($remise, 0, ',', ' ') . ' Ar</span></div>';
@@ -272,7 +308,7 @@ class RegimeController extends BaseController
             $html .= '</div>';
         }
 
-        $html .= '<div class="footer">NutriPlan — Votre santé, notre priorité</div>';
+        $html .= '<div class="footer">NutriPlan â€” Votre santÃ©, notre prioritÃ©</div>';
         $html .= '</body></html>';
 
         return $html;
