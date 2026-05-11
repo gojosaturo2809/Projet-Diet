@@ -38,12 +38,20 @@ class RegimeModel extends Model
     }
     public function countRegimes()
 {
+    if (! $this->db->tableExists('regimes')) {
+        return 0;
+    }
+
     return $this->db
         ->table('regimes')
         ->countAllResults();
 }
 public function getTotalRevenue()
 {
+    if (! $this->db->tableExists('achats_regime')) {
+        return 0;
+    }
+
     $result = $this->db
         ->table('achats_regime')
         ->selectSum('montant_total')
@@ -78,6 +86,18 @@ public function getTotalRevenue()
      */
     public function getAllWithComposition(): array
     {
+        if (! $this->db->tableExists('regimes')) {
+            return [];
+        }
+
+        if (! $this->db->tableExists('regime_composition')) {
+            return $this->db->table($this->table)
+                ->select('regimes.*')
+                ->orderBy('regimes.id', 'ASC')
+                ->get()
+                ->getResult('array');
+        }
+
         return $this->db->table($this->table)
             ->select('regimes.*, regime_composition.pourcentage_viande, regime_composition.pourcentage_poisson, regime_composition.pourcentage_volaille')
             ->join('regime_composition', 'regimes.id = regime_composition.id_regime', 'left')

@@ -25,6 +25,11 @@ class AchatModel extends Model
      */
     public function recordAchat(int $userId, int $regimeId, float $prixPaye, float $remise, int $semaines): bool
     {
+        // Check if the table exists before attempting to insert
+        if (! $this->db->tableExists('achats_regime')) {
+            return false;
+        }
+
         return (bool) $this->insert([
             'id_utilisateur'     => $userId,
             'id_regime'          => $regimeId,
