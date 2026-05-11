@@ -10,6 +10,16 @@ class RegimeModel extends Model
     protected $primaryKey       = 'id';
     protected $allowedFields    = ['nom', 'description', 'prix_journalier', 'variation_poids_hebdo', 'poids_min_requis'];
 
+    public function getWithComposition(int $id): ?array
+    {
+        return $this->db->table($this->table)
+            ->select('regimes.*, regime_composition.pourcentage_viande, regime_composition.pourcentage_poisson, regime_composition.pourcentage_volaille')
+            ->join('regime_composition', 'regimes.id = regime_composition.id_regime', 'left')
+            ->where('regimes.id', $id)
+            ->get()
+            ->getRowArray();
+    }
+
     /**
      * Algorithme de suggestion de régime
      * @param float $vitesseRequise (kg par semaine, ex: -0.5 pour perdre 2kg en 4 semaines)
