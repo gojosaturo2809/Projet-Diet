@@ -1,4 +1,4 @@
-/* =========================
+﻿/* =========================
    GLOBAL
 =========================*/
 body{
@@ -383,6 +383,78 @@ button:hover{
     background:#ab3125;
 }
 
+
+/* =========================
+   BUTTONS ACHATS
+=========================*/
+.btn-confirm {
+    background: #4caf50;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: .2s;
+    margin-right: 5px;
+}
+
+.btn-confirm:hover {
+    background: #45a049;
+    transform: translateY(-1px);
+}
+
+.btn-reject {
+    background: #f44336;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: .2s;
+}
+
+.btn-reject:hover {
+    background: #da190b;
+    transform: translateY(-1px);
+}
+
+.motif-input {
+    padding: 6px 8px !important;
+    font-size: 12px !important;
+    margin: 0 5px !important;
+    border-radius: 4px !important;
+    width: 140px !important;
+    border: 1px solid #ddd !important;
+    background: white !important;
+}
+
+/* Styles pour les liens de tableau */
+table a {
+    color: #c63b2d;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 12px;
+    display: inline-block;
+    border-radius: 6px;
+    transition: .2s;
+}
+
+table a:hover {
+    background: rgba(198, 59, 45, 0.1);
+}
+
+table a.btn-delete {
+    color: #f44336;
+}
+
+table a.btn-delete:hover {
+    background: rgba(244, 67, 54, 0.1);
+}
 /* =========================
    RESPONSIVE
 =========================*/
@@ -432,3 +504,4 @@ button:hover{
         font-size:28px;
     }
 }
+
