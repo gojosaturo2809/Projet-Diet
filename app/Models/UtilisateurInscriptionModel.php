@@ -8,13 +8,14 @@ class UtilisateurInscriptionModel extends Model
 {
     protected $table = 'utilisateur';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['nom', 'prenom', 'email', 'mot_de_passe'];
+    protected $allowedFields = ['nom', 'prenom', 'email', 'mot_de_passe', 'genre'];
 
     protected $validationRules = [
         'nom' => 'required|min_length[2]|max_length[50]',
         'prenom' => 'required|min_length[2]|max_length[50]',
         'email' => 'required|valid_email|is_unique[utilisateur.email]',
         'mot_de_passe' => 'required|min_length[6]',
+        'genre' => 'required|in_list[homme,femme,autre]',
     ];
 
     protected $validationMessages = [
@@ -37,6 +38,10 @@ class UtilisateurInscriptionModel extends Model
             'required' => 'Le mot de passe est requis',
             'min_length' => 'Le mot de passe doit comporter au moins 6 caractères',
         ],
+        'genre' => [
+            'required' => 'Veuillez sélectionner votre genre',
+            'in_list' => 'Le genre sélectionné n\'est pas valide',
+        ],
     ];
 
     public function createAccount(array $data): int
@@ -46,6 +51,7 @@ class UtilisateurInscriptionModel extends Model
             'prenom'       => trim((string) ($data['prenom'] ?? '')),
             'email'        => trim((string) ($data['email'] ?? '')),
             'mot_de_passe' => password_hash((string) ($data['mot_de_passe'] ?? ''), PASSWORD_DEFAULT),
+            'genre'        => trim((string) ($data['genre'] ?? '')),
         ];
 
         if (! $this->insert($payload)) {

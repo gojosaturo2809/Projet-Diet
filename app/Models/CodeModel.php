@@ -10,6 +10,26 @@ class CodeModel extends Model
     protected $primaryKey = 'id';
     protected $allowedFields = ['code', 'montant', 'is_active', 'used_by', 'used_at'];
 
+    public function getAllWithUsers(): array
+    {
+        return $this->db->table($this->table)
+            ->select('code_recharge.*, utilisateur.email, utilisateur.nom, utilisateur.prenom')
+            ->join('utilisateur', 'utilisateur.id = code_recharge.used_by', 'left')
+            ->orderBy('code_recharge.id', 'DESC')
+            ->get()
+            ->getResultArray();
+    }
+
+    public function createCode(array $data): bool
+    {
+        return (bool) $this->insert($data);
+    }
+
+    public function getOne(int $id): ?array
+    {
+        return $this->find($id);
+    }
+
     public function verifierCode(string $code): ?array
     {
         return $this->where('code', $code)
