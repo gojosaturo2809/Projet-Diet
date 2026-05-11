@@ -67,10 +67,19 @@ class Inscription extends BaseController
         $compteModel = new UtilisateurInscriptionModel();
         $data = $this->request->getPost();
 
-        if (! $compteModel->validate($data)) {
+        try {
+            if (! $compteModel->validate($data)) {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('errors', $compteModel->errors());
+            }
+        } catch (\Throwable $e) {
+            // Log full exception for debugging and return a friendly message to the user
+            log_message('critical', 'Inscription validation failed: ' . $e->getMessage());
+
             return redirect()->back()
                 ->withInput()
-                ->with('errors', $compteModel->errors());
+                ->with('errors', ['database' => 'Impossible de vérifier les données (erreur de base de données). Vérifiez la configuration.']);
         }
 
         $db = Database::connect();
@@ -119,7 +128,7 @@ class Inscription extends BaseController
             'inscription_etape'   => 'objectifs',
         ]);
 
-        return redirect()->to(site_url('objectifs'))
+        return redirect()->to(site_url('objectifs/'))
             ->with('success', 'Compte crÃ©Ã©. Choisissez maintenant votre objectif.');
     }
 }

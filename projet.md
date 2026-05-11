@@ -56,16 +56,10 @@ Tableau de bord, statistiques (mettre des graphes, des tableaux croisés, ...)
 
 - Pour constituer un régime, on doit mettre le % de viande, % de poisson, % de volaille
 
-## Technologies imposées
-
-- PHP + Framework Codeigniter
-- HTML / CSS
-- Javascript, AJAX
-- Mysql ou postgres
-
-## Données minimales
-
 - 5 utilisateurs
 - 15 codes
 - 5 régimes
 - 5 activités sportives
+
+## Regime :solde regime
+## Activite : suggestion activite export pdf

@@ -155,10 +155,31 @@ class RegimeController extends BaseController
         }
 
         // Enregistrer l'achat en base
-        $achatSuccess = $achatModel->recordAchat($userId, $regimeId, round($prixTotal, 2), round($remise, 2), $semaines);
+        // Use a DB transaction so debit + record are atomic
+        $db = \Config\Database::connect();
 
-        if (! $achatSuccess) {
-            return redirect()->back()->with('error', 'Achat dÃ©bitÃ© mais non enregistrÃ©. Contactez le support.');
+        $db->transStart();
+
+        // insert achat
+        $insert = $db->table('achats_regime')->insert([
+            'id_utilisateur'   => $userId,
+            'id_regime'        => $regimeId,
+            'prix_paye'        => round($prixTotal, 2),
+            'remise_appliquee' => round($remise, 2),
+            'semaines'         => $semaines,
+        ]);
+
+        // debit utilisateur
+        $update = $db->table('utilisateur')
+            ->set('solde', 'solde - ' . (float) $prixTotal, false)
+            ->where('id', $userId)
+            ->update();
+
+        $db->transComplete();
+
+        if (! $db->transStatus()) {
+            // Transaction failed: rollback already done by transComplete on failure
+            return redirect()->back()->with('error', 'Achat non enregistré. Opération annulée. Contactez le support.');
         }
 
         // Message de succÃ¨s avec dÃ©tails
@@ -169,7 +190,8 @@ class RegimeController extends BaseController
         }
 
         session()->setFlashdata('success', $msg);
-        return redirect()->to(site_url('dashboard'));
+        // Redirect back to the list of regimes so the user sees the confirmation
+        return redirect()->to(site_url('regimes'));
     }
 
     /**

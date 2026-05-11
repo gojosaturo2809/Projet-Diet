@@ -35,12 +35,20 @@ class WalletModel extends Model
     }
     public function countCodes()
 {
+    if (! $this->db->tableExists('code_recharge')) {
+        return 0;
+    }
+
     return $this->db
         ->table('code_recharge')
         ->countAllResults();
 }
 public function getAllRechargeCodes()
 {
+    if (! $this->db->tableExists('code_recharge')) {
+        return [];
+    }
+
     return $this->db
         ->table('code_recharge')
         ->select('code_recharge.*, utilisateur.email')

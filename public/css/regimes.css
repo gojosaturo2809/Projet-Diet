@@ -185,6 +185,68 @@
     transition: 0.3s;
 }
 
-.subscribe-btn:hover{
+.subscribe-btn:hover:not(:disabled){
     background: #cf3f31;
+}
+
+.subscribe-btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.subscribe-btn.insufficient-balance {
+    background: #9CA3AF;
+}
+
+/* BALANCE INFO */
+
+.balance-info {
+    margin-top: 1.5rem;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.balance-label {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.balance-amount {
+    font-weight: 700;
+    font-size: 1.3rem;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+}
+
+/* ESTIMATED PRICE BOX */
+
+.estimated-price-box {
+    background: #F3F4F6;
+    padding: 0.75rem;
+    border-radius: 8px;
+    text-align: center;
+    border: 2px solid #E5E7EB;
+}
+
+.estimated-label {
+    font-size: 0.75rem;
+    color: #6B7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.estimated-price {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #E74C3C;
+    margin-top: 0.25rem;
 }

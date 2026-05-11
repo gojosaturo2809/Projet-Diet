@@ -46,3 +46,14 @@
     </div>
 </nav>
 <main class="container">
+    <?php if (session()->getFlashdata('success')): ?>
+        <div class="alert alert-success" style="margin-top:1rem;">
+            <?= esc(session()->getFlashdata('success')) ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if (session()->getFlashdata('error')): ?>
+        <div class="alert alert-error" style="margin-top:1rem;">
+            <?= esc(session()->getFlashdata('error')) ?>
+        </div>
+    <?php endif; ?>
