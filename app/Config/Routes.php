@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 use CodeIgniter\Router\RouteCollection;
 
@@ -45,11 +45,11 @@ $routes->group('objectifs', static function ($routes) {
     $routes->post('selectionner', 'ObjectifController::selectionner');
 });
 
-// RÃƒÂ©gimes: impression et souscription
+// RÃƒÆ’Ã‚Â©gimes: impression et souscription
 $routes->get('regimes', 'RegimeController::index');
 $routes->get('regimes/print', 'RegimeController::printable');
 $routes->get('regimes/download-pdf', 'RegimeController::downloadPdf');
-$routes->post('regimes/souscrire', 'RegimeController::souscrire');
+$routes->match(['get', 'post'], 'regimes/souscrire', 'RegimeController::souscrire');
 
 /*
 |--------------------------------------------------------------------------
@@ -116,4 +116,15 @@ $routes->group('admin', static function ($routes) {
 
 
 
+    
+    /*
+    |--------------------------------------------------------------------------
+    | ACHATS REGIMES (Confirmation Admin)
+    |--------------------------------------------------------------------------
+    */
+
+    $routes->match(['get', 'post'], 'achats', 'Admin\AchatAdmin::index');
+    $routes->post('achats/confirm/(:num)', 'Admin\AchatAdmin::confirm/$1');
+    $routes->post('achats/reject/(:num)', 'Admin\AchatAdmin::reject/$1');
 });
+

@@ -110,7 +110,9 @@ class RegimeController extends BaseController
     }
 
     /**
-     * Traitement d'abonnement / achat de rÃ©gime simple (dÃ©bite le portefeuille)
+     * Traitement d'abonnement / achat de rÃ©gime
+     * L'achat est enregistrÃ© en attente de confirmation par l'admin
+     * Le solde n'est dÃ©bitÃ© que lors de la confirmation
      */
     public function souscrire()
     {
@@ -147,50 +149,21 @@ class RegimeController extends BaseController
             return redirect()->back()->with('error', 'Solde insuffisant. Veuillez recharger votre portefeuille.');
         }
 
-        // DÃ©biter le portefeuille (montant nÃ©gatif)
-        $walletSuccess = $walletModel->modifierSolde($userId, -$prixTotal);
+        // Enregistrer l'achat EN ATTENTE DE CONFIRMATION (pas de dÃ©bit immÃ©diat)
+        $achatSuccess = $achatModel->recordAchat($userId, $regimeId, round($prixTotal, 2), round($remise, 2), $semaines);
 
-        if (! $walletSuccess) {
-            return redirect()->back()->with('error', 'Impossible de traiter l\'achat pour le moment.');
+        if (!$achatSuccess) {
+            return redirect()->back()->with('error', 'Impossible d\'enregistrer l\'achat. Veuillez rÃ©essayer.');
         }
 
-        // Enregistrer l'achat en base
-        // Use a DB transaction so debit + record are atomic
-        $db = \Config\Database::connect();
-
-        $db->transStart();
-
-        // insert achat
-        $insert = $db->table('achats_regime')->insert([
-            'id_utilisateur'   => $userId,
-            'id_regime'        => $regimeId,
-            'prix_paye'        => round($prixTotal, 2),
-            'remise_appliquee' => round($remise, 2),
-            'semaines'         => $semaines,
-        ]);
-
-        // debit utilisateur
-        $update = $db->table('utilisateur')
-            ->set('solde', 'solde - ' . (float) $prixTotal, false)
-            ->where('id', $userId)
-            ->update();
-
-        $db->transComplete();
-
-        if (! $db->transStatus()) {
-            // Transaction failed: rollback already done by transComplete on failure
-            return redirect()->back()->with('error', 'Achat non enregistré. Opération annulée. Contactez le support.');
-        }
-
-        // Message de succÃ¨s avec dÃ©tails
+        // Message de succÃ¨s - achat en attente de confirmation
         $montantStr = number_format($prixTotal, 0, ',', ' ') . ' Ar';
-        $msg = 'Achat confirmÃ© â€” ' . $montantStr;
+        $msg = 'Achat enregistrÃ© en attente de confirmation - ' . $montantStr;
         if ($remise > 0) {
             $msg .= ' (Remise Gold: ' . number_format($remise, 0, ',', ' ') . ' Ar)';
         }
 
         session()->setFlashdata('success', $msg);
-        // Redirect back to the list of regimes so the user sees the confirmation
         return redirect()->to(site_url('regimes'));
     }
 
@@ -295,7 +268,7 @@ class RegimeController extends BaseController
 
         $html .= '<div class="header">';
         $html .= '<h1>NutriPlan</h1>';
-        $html .= '<p>Programme de rÃ©gimes personnalisÃ©s â€” Export du ' . date('d/m/Y H:i') . '</p>';
+        $html .= '<p>Programme de rÃ©gimes personnalisÃ©s â€“ Export du ' . date('d/m/Y H:i') . '</p>';
         $html .= '</div>';
 
         $html .= '<div class="no-print"><button onclick="window.print()">Imprimer / Enregistrer en PDF</button></div>';
@@ -308,7 +281,7 @@ class RegimeController extends BaseController
             $prixFinal = $prixBase - $remise;
 
             $html .= '<div class="regime-card">';
-            $html .= '<h2>' . htmlspecialchars($r['nom'] ?? 'â€”') . '</h2>';
+            $html .= '<h2>' . htmlspecialchars($r['nom'] ?? 'â€“') . '</h2>';
             $html .= '<p>' . htmlspecialchars($r['description'] ?? '') . '</p>';
 
             $html .= '<div class="composition">';
@@ -330,9 +303,11 @@ class RegimeController extends BaseController
             $html .= '</div>';
         }
 
-        $html .= '<div class="footer">NutriPlan â€” Votre santÃ©, notre prioritÃ©</div>';
+        $html .= '<div class="footer">NutriPlan â€“ Votre santÃ©, notre prioritÃ©</div>';
         $html .= '</body></html>';
 
         return $html;
     }
 }
+
+
