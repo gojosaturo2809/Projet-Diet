@@ -131,6 +131,14 @@ body{
     font-weight:700;
 }
 
+h1{
+    font-family:var(--font-d);
+    font-size:42px;
+    margin:0 0 30px 0;
+    color:#181818;
+    font-weight:700;
+}
+
 /* =========================
    KPI GRID
 =========================*/
@@ -141,7 +149,7 @@ body{
     margin-bottom:28px;
 }
 
-.kpi-card{
+.kpi, .kpi-card{
     background:white;
     border-radius:24px;
     padding:28px;
@@ -152,18 +160,18 @@ body{
     transition:.25s;
 }
 
-.kpi-card:hover{
+.kpi:hover, .kpi-card:hover{
     transform:translateY(-4px);
 }
 
-.kpi-card h2{
+.kpi h2, .kpi-card h2{
     font-family:var(--font-d);
     font-size:42px;
     margin:0;
     color:#181818;
 }
 
-.kpi-card p{
+.kpi p, .kpi-card p{
     margin:4px 0 0;
     color:#777;
     font-size:13px;
@@ -171,11 +179,52 @@ body{
     letter-spacing:.08em;
 }
 
-.kpi-card .kpi-growth{
+.kpi .kpi-growth, .kpi-card .kpi-growth{
     margin-top:14px;
     color:#35a067;
     font-size:14px;
     font-weight:600;
+}
+
+/* =========================
+   CHARTS
+=========================*/
+.charts-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:28px;
+    margin-top:28px;
+    margin-bottom:28px;
+}
+
+.charts{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:28px;
+    margin-top:28px;
+}
+
+.chart-box{
+    background:white;
+    border-radius:28px;
+    padding:28px;
+    box-shadow:
+        0 2px 6px rgba(0,0,0,.03),
+        0 14px 30px rgba(0,0,0,.04);
+}
+
+.chart-box h3{
+    font-family:var(--font-d);
+    font-size:24px;
+    margin-top:0;
+    margin-bottom:24px;
+    color:#181818;
+    font-weight:700;
+}
+
+.chart-box canvas{
+    max-width:100%;
+    height:auto;
 }
 
 /* =========================
@@ -341,6 +390,11 @@ button:hover{
     .kpi-grid{
         grid-template-columns:repeat(2,1fr);
     }
+    
+    .charts-grid,
+    .charts{
+        grid-template-columns:1fr;
+    }
 }
 
 @media(max-width:900px){
@@ -372,5 +426,9 @@ button:hover{
 
     .page-title{
         font-size:36px;
+    }
+    
+    h1{
+        font-size:28px;
     }
 }

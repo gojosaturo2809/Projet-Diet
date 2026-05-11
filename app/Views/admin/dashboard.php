@@ -3,7 +3,7 @@
 
 <div class="admin-content">
 
-    <h1>📊 Dashboard Admin</h1>
+    <h1>Tableau de bord</h1>
 
     <!-- KPIs -->
     <div class="kpi-grid">
@@ -31,15 +31,15 @@
     </div>
 
     <!-- GRAPHIQUES -->
-    <div class="charts">
+    <div class="charts-grid">
 
         <div class="chart-box">
-            <h3>📈 Inscriptions mensuelles</h3>
+            <h3>Inscriptions mensuelles</h3>
             <canvas id="chartUsers"></canvas>
         </div>
 
         <div class="chart-box">
-            <h3>🥗 Objectifs régimes</h3>
+            <h3>Répartition des objectifs</h3>
             <canvas id="chartRegimes"></canvas>
         </div>
 
@@ -54,7 +54,7 @@
 const usersData = <?= json_encode($usersMonthly ?? []) ?>;
 const regimesData = <?= json_encode($regimesObjectif ?? []) ?>;
 
-/* 📈 USERS */
+/* USERS */
 new Chart(document.getElementById('chartUsers'), {
     type: 'line',
     data: {
@@ -62,19 +62,35 @@ new Chart(document.getElementById('chartUsers'), {
         datasets: [{
             label: 'Inscriptions',
             data: usersData.map(u => u.total),
-            borderWidth: 2
+            borderColor: '#c63b2d',
+            borderWidth: 2,
+            fill: false
         }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: true
     }
 });
 
-/* 🥗 REGIMES */
+/* REGIMES - PIE CHART */
 new Chart(document.getElementById('chartRegimes'), {
     type: 'pie',
     data: {
         labels: regimesData.map(r => r.objectif),
         datasets: [{
-            data: regimesData.map(r => r.total)
+            data: regimesData.map(r => r.total),
+            backgroundColor: [
+                '#c63b2d',
+                '#d9534f',
+                '#e8a4a0',
+                '#f5d5d2'
+            ]
         }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: true
     }
 });
 </script>
