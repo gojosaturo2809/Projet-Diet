@@ -81,6 +81,12 @@ $routes->group('admin', static function ($routes) {
     $routes->post('regimes/store',
         'Admin\RegimeAdmin::store');
 
+    $routes->get('regimes/(:num)/edit',
+        'Admin\RegimeAdmin::edit/$1');
+
+    $routes->post('regimes/(:num)/update',
+        'Admin\RegimeAdmin::update/$1');
+
     $routes->get('regimes/delete/(:num)',
         'Admin\RegimeAdmin::delete/$1');
 
@@ -98,6 +104,15 @@ $routes->group('admin', static function ($routes) {
 
     $routes->post('codes/store',
         'Admin\WalletCodeAdmin::store');
+
+    $routes->get('codes/(:num)/edit',
+        'Admin\WalletCodeAdmin::edit/$1');
+
+    $routes->post('codes/(:num)/update',
+        'Admin\WalletCodeAdmin::update/$1');
+
+    $routes->get('codes/delete/(:num)',
+        'Admin\WalletCodeAdmin::delete/$1');
 
 
 

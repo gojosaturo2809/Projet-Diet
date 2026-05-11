@@ -497,6 +497,121 @@ button, input { font: inherit; }
     padding-left: 18px;
 }
 
+/* Gender Selection - Radio Buttons */
+.gender-fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+.genre-label {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--dark-700);
+    display: block;
+    margin-bottom: 12px;
+}
+
+.radio-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border: 1.5px solid var(--dark-200);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all .2s ease;
+    background: white;
+    user-select: none;
+}
+
+.radio-label:hover {
+    border-color: var(--red-400);
+    background: var(--red-50);
+}
+
+.radio-label input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    pointer-events: none;
+}
+
+.radio-custom {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--dark-300);
+    border-radius: 50%;
+    flex-shrink: 0;
+    transition: all .2s ease;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.radio-custom::after {
+    content: '';
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: var(--red-600);
+    transition: width .2s ease, height .2s ease;
+}
+
+.radio-label input[type="radio"]:checked + .radio-custom {
+    border-color: var(--red-600);
+    background: white;
+}
+
+.radio-label input[type="radio"]:checked + .radio-custom::after {
+    width: 8px;
+    height: 8px;
+}
+
+.radio-text {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--dark-900);
+}
+
+.radio-label input[type="radio"]:checked ~ .radio-text,
+.radio-label input[type="radio"]:checked + .radio-custom + .radio-text {
+    color: var(--red-600);
+}
+
+.radio-label input[type="radio"]:checked {
+    /* Radio is checked but hidden */
+}
+
+.radio-label input[type="radio"]:checked ~ * ~ .radio-text {
+    color: var(--red-600);
+}
+
+.field .radio-label input[type="radio"]:checked {
+    /* Make sure the radio is hidden */
+}
+
+/* When radio is checked, highlight the label */
+.radio-label:has(input[type="radio"]:checked) {
+    border-color: var(--red-600);
+    background: var(--red-50);
+}
+
+.radio-label:has(input[type="radio"]:checked) .radio-text {
+    color: var(--red-600);
+}
+
 @media (max-width: 760px) {
     .signup-shell {
         align-items: flex-start;
@@ -517,5 +632,14 @@ button, input { font: inherit; }
 
     .step-actions.two-actions {
         gap: 10px;
+    }
+
+    .radio-group {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .radio-label {
+        padding: 14px 12px;
     }
 }

@@ -11,8 +11,8 @@
 </head>
 <body>
 <?php
-$healthData = is_array($healthData ?? null) ? $healthData : [];
-$errors = is_array($errors ?? null) ? $errors : [];
+$healthData = (isset($healthData) && is_array($healthData)) ? $healthData : [];
+$errors = (isset($errors) && is_array($errors)) ? $errors : [];
 $initialStep = ! empty($healthData) ? 2 : 1;
 $imcValue = isset($healthData['imc']) ? number_format((float) $healthData['imc'], 1, ',', ' ') : '—';
 $imcLabel = $healthData['categorie'] ?? 'Renseignez votre poids et votre taille pour calculer votre IMC.';
@@ -43,11 +43,11 @@ $flashSuccess = session()->getFlashdata('success');
         </div>
 
         <?php if ($flashError) : ?>
-            <div class="flash flash-error"><?= esc($flashError) ?></div>
+            <div class="flash flash-error"><?= esc((string) $flashError) ?></div>
         <?php endif; ?>
 
         <?php if ($flashSuccess) : ?>
-            <div class="flash flash-success"><?= esc($flashSuccess) ?></div>
+            <div class="flash flash-success"><?= esc((string) $flashSuccess) ?></div>
         <?php endif; ?>
 
         <div class="wizard-panels">
@@ -98,7 +98,7 @@ $flashSuccess = session()->getFlashdata('success');
                     <div class="flash flash-error">
                         <ul class="error-list">
                             <?php foreach ($errors as $error) : ?>
-                                <li><?= esc($error) ?></li>
+                                <li><?= esc((string) $error) ?></li>
                             <?php endforeach; ?>
                         </ul>
                     </div>
@@ -121,6 +121,30 @@ $flashSuccess = session()->getFlashdata('success');
                             <input id="prenom" name="prenom" type="text" placeholder="Jean" value="<?= esc(old('prenom')) ?>" required>
                             <?php if (isset($errors['prenom'])) : ?><small class="field-error visible"><?= esc($errors['prenom']) ?></small><?php endif; ?>
                         </div>
+                    </div>
+
+                    <div class="field">
+                        <fieldset class="gender-fieldset">
+                            <legend class="genre-label">Genre</legend>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="genre" value="homme" <?= (old('genre') === 'homme') ? 'checked' : '' ?> required>
+                                    <span class="radio-custom"></span>
+                                    <span class="radio-text">Homme</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="genre" value="femme" <?= (old('genre') === 'femme') ? 'checked' : '' ?> required>
+                                    <span class="radio-custom"></span>
+                                    <span class="radio-text">Femme</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="genre" value="autre" <?= (old('genre') === 'autre') ? 'checked' : '' ?> required>
+                                    <span class="radio-custom"></span>
+                                    <span class="radio-text">Autre</span>
+                                </label>
+                            </div>
+                            <?php if (isset($errors['genre'])) : ?><small class="field-error visible"><?= esc($errors['genre']) ?></small><?php endif; ?>
+                        </fieldset>
                     </div>
 
                     <div class="field">
