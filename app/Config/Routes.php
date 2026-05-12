@@ -39,6 +39,8 @@ $routes->group('objectifs', static function ($routes) {
     $routes->post('selectionner', 'ObjectifController::selectionner');
 
     $routes->get('getDetailsForm', 'ObjectifController::getDetailsForm');
+    
+    $routes->get('custom', 'ObjectifController::custom');
 
     // 3. Traitement final du formulaire (POST)
     // URL : localhost:8080/objectifs/selectionner
@@ -46,9 +48,7 @@ $routes->group('objectifs', static function ($routes) {
 });
 
 // RÃƒÆ’Ã‚Â©gimes: impression et souscription
-$routes->get('regimes', 'RegimeController::index');
-$routes->get('regimes/print', 'RegimeController::printable');
-$routes->get('regimes/download-pdf', 'RegimeController::downloadPdf');
+$routes->get('regimes', 'RegimeController::index');$routes->get('regimes/detail', 'RegimeController::detail');$routes->get('regimes/print', 'RegimeController::printable');
 $routes->match(['get', 'post'], 'regimes/souscrire', 'RegimeController::souscrire');
 
 /*

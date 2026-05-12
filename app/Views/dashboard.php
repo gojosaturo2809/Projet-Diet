@@ -70,7 +70,6 @@
                         <h2><?= isset($activeRegime['nom']) ? esc($activeRegime['nom']) : 'Aucun régime' ?></h2>
                     </div>
                     <div class="dashboard-regime-actions" aria-label="Actions du régime">
-                        <span class="btn bo dashboard-ghost-btn">↓ PDF</span>
                         <a class="btn bp" href="<?= site_url('objectifs') ?>">Changer</a>
                     </div>
                 </div>

@@ -80,7 +80,21 @@ class ObjectifController extends BaseController
 
         $idObjectif = (int) $this->request->getPost('id_objectif');
         $poidsCible = (float) $this->request->getPost('poids_cible');
-        $duree = (int) $this->request->getPost('duree_objectif_semaine');
+        $dureeRaw = $this->request->getPost('duree_objectif_semaine');
+
+        // Si l'utilisateur a choisi "custom" via la select, rediriger vers la page de durée personnalisée
+        if ($dureeRaw === 'custom') {
+            $url = site_url('objectifs/custom');
+            $params = [];
+            if ($idObjectif > 0) $params['id_objectif'] = $idObjectif;
+            if (! empty($poidsCible)) $params['poids_cible'] = $poidsCible;
+            if (! empty($params)) {
+                $url .= '?' . http_build_query($params);
+            }
+            return redirect()->to($url);
+        }
+
+        $duree = (int) $dureeRaw;
 
         if ($idObjectif <= 0) {
             return redirect()->back()->withInput()
@@ -130,5 +144,30 @@ class ObjectifController extends BaseController
         }
 
         return redirect()->to(site_url('dashboard'))->with('success', $msg);
+    }
+
+    /**
+     * Page pour saisir une durée personnalisée (4 mois ou plus)
+     * Reçoit en GET : id_objectif, poids_cible (optionnel)
+     */
+    public function custom()
+    {
+        $idUtilisateur = (int) (session()->get('id_utilisateur') ?? session()->get('user_id') ?? 0);
+        if ($idUtilisateur <= 0) {
+            return redirect()->to(site_url('inscription'))->with('error', 'Veuillez vous connecter.');
+        }
+
+        $idObjectif = (int) $this->request->getGet('id_objectif');
+        $poidsCible = $this->request->getGet('poids_cible');
+
+        // Si l'id objectif est manquant, rediriger vers la liste
+        if ($idObjectif <= 0) {
+            return redirect()->to(site_url('objectifs'))->with('error', 'Objectif non spécifié.');
+        }
+
+        return view('objectifs/custom_duration', [
+            'idObjectif' => $idObjectif,
+            'poidsCible' => $poidsCible,
+        ]);
     }
 }

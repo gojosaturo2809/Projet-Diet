@@ -26,13 +26,16 @@ class RegimeModel extends Model
      */
     public function suggererRegime(float $vitesseRequise)
     {
-        // On cherche le régime dont la variation hebdomadaire est la plus proche 
-        // de la vitesse requise par l'utilisateur.
+        // On cherche le régime dont la variation hebdomadaire est la plus proche
+        // de la vitesse requise par l'utilisateur. On force un cast float
+        // et on utilise un LEFT JOIN pour inclure les régimes sans composition.
+        $vitesse = (float) $vitesseRequise;
+
         return $this->db->table($this->table)
             ->select('regimes.*, regime_composition.*')
-            ->join('regime_composition', 'regimes.id = regime_composition.id_regime')
+            ->join('regime_composition', 'regimes.id = regime_composition.id_regime', 'left')
             // Tri par la différence absolue la plus petite entre l'objectif et la capacité du régime
-            ->orderBy("ABS(variation_poids_hebdo - $vitesseRequise)", 'ASC')
+            ->orderBy("ABS(variation_poids_hebdo - {$vitesse})", 'ASC')
             ->get()
             ->getRowArray();
     }
@@ -52,13 +55,17 @@ public function getTotalRevenue()
         return 0;
     }
 
-    $result = $this->db
-        ->table('achats_regime')
-        ->selectSum('montant_total')
-        ->get()
-        ->getRow();
+    try {
+        $result = $this->db
+            ->table('achats_regime')
+            ->selectSum('montant_total')
+            ->get()
+            ->getRow();
 
-    return $result->montant_total ?? 0;
+        return $result->montant_total ?? 0;
+    } catch (\Throwable $e) {
+        return 0;
+    }
 }
 
     /**
@@ -102,6 +109,40 @@ public function getTotalRevenue()
             ->select('regimes.*, regime_composition.pourcentage_viande, regime_composition.pourcentage_poisson, regime_composition.pourcentage_volaille')
             ->join('regime_composition', 'regimes.id = regime_composition.id_regime', 'left')
             ->orderBy('regimes.id', 'ASC')
+            ->get()
+            ->getResult('array');
+    }
+
+    /**
+     * Récupère un régime avec ses activités (sports) associées
+     */
+    public function getWithActivities(int $regimeId): ?array
+    {
+        // Récupérer le régime avec sa composition
+        $regime = $this->getWithComposition($regimeId);
+        
+        if (! $regime) {
+            return null;
+        }
+
+        // Récupérer les activités associées à ce régime
+        $regime['activites'] = $this->getActivitiesByRegimeId($regimeId);
+
+        return $regime;
+    }
+
+    /**
+     * Récupère toutes les activités associées à un régime
+     */
+    public function getActivitiesByRegimeId(int $regimeId): array
+    {
+        if (! $this->db->tableExists('sports')) {
+            return [];
+        }
+
+        return $this->db->table('sports')
+            ->where('id_regime_associe', $regimeId)
+            ->orderBy('intensite', 'ASC')
             ->get()
             ->getResult('array');
     }
