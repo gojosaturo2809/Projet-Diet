@@ -198,6 +198,24 @@
     background: #9CA3AF;
 }
 
+.view-detail-btn {
+    display: inline-block;
+    padding: 0.7rem 1.2rem;
+    background: #2196F3;
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    transition: 0.3s;
+    margin-right: 10px;
+}
+
+.view-detail-btn:hover {
+    background: #1976D2;
+    text-decoration: none;
+}
+
 /* BALANCE INFO */
 
 .balance-info {

@@ -84,6 +84,10 @@ echo view('layout/header', ['navLinks' => null, 'extraStylesheets' => ['css/styl
                         </div>
                     </div>
 
+                    <a href="<?php echo site_url('regimes/detail?id=' . (int)$r['id']); ?>" class="view-detail-btn" title="Voir détail et activités recommandées">
+                        👁️ Voir
+                    </a>
+
                     <form method="post" action="<?php echo base_url("regimes/souscrire"); ?>" class="subscribe-form" data-price-per-day="<?php echo (float)($r["prix_journalier"] ?? 0); ?>" data-is-gold="<?php echo $isGoldUser ? '1' : '0'; ?>" data-solde="<?php echo $solde; ?>">
 
                         <input type="hidden" name="regime_id" value="<?php echo (int)$r["id"]; ?>">
