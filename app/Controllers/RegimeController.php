@@ -113,8 +113,14 @@ class RegimeController extends BaseController
             return redirect()->to(site_url('objectifs'))->with('error', 'Durée d\'objectif invalide.');
         }
 
+        $imc = null;
+        if (! empty($sante['poids']) && ! empty($sante['taille']) && (float) $sante['taille'] > 0) {
+            $tailleM = ((float) $sante['taille']) / 100;
+            $imc = ((float) $sante['poids']) / ($tailleM * $tailleM);
+        }
+
         $vitesseRequise = $deltaPoids / $dureeSemaines;
-        $regimeSuggere = $regimeModel->suggererRegime($vitesseRequise);
+        $regimeSuggere = $regimeModel->suggererRegime($vitesseRequise, $imc, (string) ($objectif['nom'] ?? ''));
 
         if (! $regimeSuggere) {
             return view('regimes/aucun_resultat');
@@ -131,9 +137,10 @@ class RegimeController extends BaseController
         }
 
         $sport = $regimeModel->getSportSuggere($regimeSuggere['variation_poids_hebdo'] ?? 0);
+        $regimeDetail = $regimeModel->getWithActivities((int) ($regimeSuggere['id'] ?? 0)) ?? $regimeSuggere;
 
         return view('regimes/suggestion_view', [
-            'regime' => $regimeSuggere,
+            'regime' => $regimeDetail,
             'objectif' => $objectif,
             'sante' => $sante,
             'prixTotal' => $prixTotal,

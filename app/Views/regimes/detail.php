@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= esc($regime['nom'] ?? 'Détail Régime') ?> - NutriPlan</title>
+    <title><?= esc((string) ($regime['nom'] ?? 'Détail Régime')) ?> - NutriPlan</title>
     <link rel="stylesheet" href="<?= base_url('css/dashboard.css') ?>">
     <style>
         .detail-container { max-width: 900px; margin: 20px auto; padding: 20px; }
@@ -44,8 +44,8 @@
 <body>
     <div class="detail-container">
         <div class="regime-header">
-            <h1><?= esc($regime['nom'] ?? '—') ?></h1>
-            <p><?= esc($regime['description'] ?? '') ?></p>
+            <h1><?= esc((string) ($regime['nom'] ?? '—')) ?></h1>
+            <p><?= esc((string) ($regime['description'] ?? '')) ?></p>
         </div>
 
         <div class="regime-meta">
@@ -89,9 +89,9 @@
                 <div class="activites-grid">
                     <?php foreach ($regime['activites'] as $activite) : ?>
                         <div class="activite-card">
-                            <div class="activite-name"><?= esc($activite['nom'] ?? '—') ?></div>
+                            <div class="activite-name"><?= esc((string) ($activite['nom'] ?? '—')) ?></div>
                             <div class="activite-intensite intensite-<?= strtolower(str_replace(' ', '_', $activite['intensite'] ?? 'moderee')) ?>">
-                                <?= esc($activite['intensite'] ?? 'Modérée') ?>
+                                <?= esc((string) ($activite['intensite'] ?? 'Modérée')) ?>
                             </div>
                             <?php if (! empty($activite['calories_heure'])) : ?>
                                 <div class="activite-calories">
@@ -107,6 +107,25 @@
                 </div>
             <?php endif; ?>
         </div>
+
+        <?php if (! empty($regime['activites_combinations']) && is_array($regime['activites_combinations'])) : ?>
+        <div class="activites-section">
+            <h3 class="section-title">Combinaisons d'activités générées récursivement</h3>
+            <div class="activites-grid">
+                <?php foreach ($regime['activites_combinations'] as $combo) : ?>
+                    <div class="activite-card">
+                        <div class="activite-name"><?= esc((string) ($combo['label'] ?? '—')) ?></div>
+                        <div class="activite-calories">
+                            🔥 <?= (int) ($combo['calories_total'] ?? 0) ?> cal/h cumulées
+                        </div>
+                        <div class="activite-calories">
+                            🧩 <?= (int) ($combo['taille'] ?? 0) ?> activité(s)
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <?php endif; ?>
 
         <div class="action-buttons">
             <button class="btn btn-primary" onclick="window.print()">📄 Exporter en PDF</button>

@@ -20,24 +20,121 @@ class RegimeModel extends Model
             ->getRowArray();
     }
 
+    private function determineGoalDirection(float $vitesseRequise, ?float $imc = null, string $objectifNom = ''): string
+    {
+        $objectif = mb_strtolower(trim($objectifNom));
+
+        if ($imc !== null && $imc >= 30.0) {
+            return 'loss';
+        }
+
+        foreach (['obes', 'surpoids', 'maigr', 'perte', 'sèche', 'seche', 'mincir'] as $keyword) {
+            if ($objectif !== '' && str_contains($objectif, $keyword)) {
+                return 'loss';
+            }
+        }
+
+        foreach (['prise', 'masse', 'gross', 'muscle', 'gain'] as $keyword) {
+            if ($objectif !== '' && str_contains($objectif, $keyword)) {
+                return 'gain';
+            }
+        }
+
+        if ($vitesseRequise < 0) {
+            return 'loss';
+        }
+
+        if ($vitesseRequise > 0) {
+            return 'gain';
+        }
+
+        return 'balance';
+    }
+
+    private function scoreRegime(array $regime, string $direction, float $vitesseRequise, ?float $imc = null): float
+    {
+        $variation = (float) ($regime['variation_poids_hebdo'] ?? 0);
+        $score = abs($variation - $vitesseRequise);
+
+        if ($direction === 'loss' && $variation > 0) {
+            $score += 8.0;
+        }
+
+        if ($direction === 'gain' && $variation < 0) {
+            $score += 8.0;
+        }
+
+        if ($direction === 'balance') {
+            $score += abs($variation) * 0.5;
+        }
+
+        if ($imc !== null && $imc >= 30.0 && $variation > 0) {
+            $score += 12.0;
+        }
+
+        $poidsMin = (float) ($regime['poids_min_requis'] ?? 0);
+        if ($imc !== null && $poidsMin > 0 && $imc < 18.5 && $direction === 'loss') {
+            $score += 3.0;
+        }
+
+        return $score;
+    }
+
     /**
      * Algorithme de suggestion de régime
      * @param float $vitesseRequise (kg par semaine, ex: -0.5 pour perdre 2kg en 4 semaines)
      */
-    public function suggererRegime(float $vitesseRequise)
+    public function suggererRegime(float $vitesseRequise, ?float $imc = null, string $objectifNom = '')
     {
-        // On cherche le régime dont la variation hebdomadaire est la plus proche
-        // de la vitesse requise par l'utilisateur. On force un cast float
-        // et on utilise un LEFT JOIN pour inclure les régimes sans composition.
-        $vitesse = (float) $vitesseRequise;
+        $direction = $this->determineGoalDirection($vitesseRequise, $imc, $objectifNom);
+        $desiredVariation = $vitesseRequise;
 
-        return $this->db->table($this->table)
-            ->select('regimes.*, regime_composition.*')
-            ->join('regime_composition', 'regimes.id = regime_composition.id_regime', 'left')
-            // Tri par la différence absolue la plus petite entre l'objectif et la capacité du régime
-            ->orderBy("ABS(variation_poids_hebdo - {$vitesse})", 'ASC')
-            ->get()
-            ->getRowArray();
+        if ($direction === 'loss') {
+            $desiredVariation = -abs($vitesseRequise ?: 0.5);
+        } elseif ($direction === 'gain') {
+            $desiredVariation = abs($vitesseRequise ?: 0.3);
+        } else {
+            $desiredVariation = 0.0;
+        }
+
+        $regimes = $this->getAllWithComposition();
+        if (empty($regimes)) {
+            return null;
+        }
+
+        $filtered = [];
+        foreach ($regimes as $regime) {
+            $variation = (float) ($regime['variation_poids_hebdo'] ?? 0);
+
+            if ($direction === 'loss' && $variation > 0) {
+                continue;
+            }
+
+            if ($direction === 'gain' && $variation < 0) {
+                continue;
+            }
+
+            $filtered[] = $regime;
+        }
+
+        if (empty($filtered)) {
+            // Si aucun régime ne correspond vraiment à l'objectif, on préfère
+            // ne rien proposer plutôt que d'afficher des régimes incompatibles.
+            return null;
+        }
+
+        usort($filtered, function (array $a, array $b) use ($direction, $desiredVariation, $imc): int {
+            $scoreA = $this->scoreRegime($a, $direction, $desiredVariation, $imc);
+            $scoreB = $this->scoreRegime($b, $direction, $desiredVariation, $imc);
+
+            if ($scoreA === $scoreB) {
+                return strcmp((string) ($a['nom'] ?? ''), (string) ($b['nom'] ?? ''));
+            }
+
+            return $scoreA <=> $scoreB;
+        });
+
+        return $filtered[0] ?? null;
     }
     public function countRegimes()
 {
@@ -127,6 +224,7 @@ public function getTotalRevenue()
 
         // Récupérer les activités associées à ce régime
         $regime['activites'] = $this->getActivitiesByRegimeId($regimeId);
+        $regime['activites_combinations'] = $this->getActivityCombinationsByRegimeId($regimeId);
 
         return $regime;
     }
@@ -145,5 +243,69 @@ public function getTotalRevenue()
             ->orderBy('intensite', 'ASC')
             ->get()
             ->getResult('array');
+    }
+
+    private function buildActivityCombinations(array $activities, int $maxSize, int $startIndex, array $current, array &$results): void
+    {
+        if (! empty($current)) {
+            $results[] = $current;
+        }
+
+        if (count($current) >= $maxSize) {
+            return;
+        }
+
+        $total = count($activities);
+        for ($i = $startIndex; $i < $total; $i++) {
+            $next = $current;
+            $next[] = $activities[$i];
+            $this->buildActivityCombinations($activities, $maxSize, $i + 1, $next, $results);
+        }
+    }
+
+    public function getActivityCombinationsByRegimeId(int $regimeId, int $maxSize = 3): array
+    {
+        $activities = $this->getActivitiesByRegimeId($regimeId);
+        if (empty($activities)) {
+            return [];
+        }
+
+        $combinations = [];
+        $this->buildActivityCombinations($activities, max(1, $maxSize), 0, [], $combinations);
+
+        $ranked = [];
+        foreach ($combinations as $combo) {
+            $calories = 0;
+            $labels = [];
+            $intensiteRank = 0;
+
+            foreach ($combo as $activity) {
+                $calories += (int) ($activity['calories_heure'] ?? 0);
+                $labels[] = (string) ($activity['nom'] ?? '');
+                $intensite = strtolower((string) ($activity['intensite'] ?? 'modérée'));
+                $intensiteRank += match ($intensite) {
+                    'intense' => 3,
+                    'modérée', 'moderee' => 2,
+                    default => 1,
+                };
+            }
+
+            $ranked[] = [
+                'combinaison' => $combo,
+                'label' => implode(' + ', array_filter($labels)),
+                'calories_total' => $calories,
+                'intensite_score' => $intensiteRank,
+                'taille' => count($combo),
+            ];
+        }
+
+        usort($ranked, function (array $a, array $b): int {
+            $scoreA = ($a['taille'] * 10) + $a['intensite_score'] + (int) round($a['calories_total'] / 100);
+            $scoreB = ($b['taille'] * 10) + $b['intensite_score'] + (int) round($b['calories_total'] / 100);
+
+            return $scoreB <=> $scoreA;
+        });
+
+        return array_slice($ranked, 0, 6);
     }
 }

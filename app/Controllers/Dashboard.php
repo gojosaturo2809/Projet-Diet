@@ -42,8 +42,9 @@ class Dashboard extends BaseController
         $objectifActuel = $objectifModel->getObjectifActuel($userId);
         if ($objectifActuel && $latestHealth) {
             $deltaPoids = $objectifActuel['poids_cible'] - $latestHealth['poids'];
+            $imcValue = ($poids !== null && $taille !== null && $taille > 0) ? $healthModel->calculerImc($poids, $taille) : null;
             $vitesseRequise = $deltaPoids / max(1, (int) $objectifActuel['duree_objectif_semaine']);
-            $sugg = $regimeModel->suggererRegime($vitesseRequise);
+            $sugg = $regimeModel->suggererRegime($vitesseRequise, $imcValue, (string) ($objectifActuel['nom'] ?? ''));
             if ($sugg) {
                 $totalSemaines = (int) $objectifActuel['duree_objectif_semaine'];
                 $activeRegime = [

@@ -10,6 +10,8 @@ class WalletModel extends Model
     protected $primaryKey = 'id';
     protected $allowedFields = ['solde', 'is_gold'];
 
+    public const GOLD_PRICE = 25000.0;
+
     public function getSoldeUtilisateur(int $userId): float
     {
         $row = $this->select('solde')->find($userId);
@@ -29,9 +31,34 @@ class WalletModel extends Model
         return (bool) $this->update($userId, ['solde' => $newSolde]);
     }
 
-    public function activerGold(int $userId): bool
+    public function activerGold(int $userId, float $prixGold = self::GOLD_PRICE): bool
     {
-        return (bool) $this->update($userId, ['is_gold' => 1]);
+        $db = $this->db;
+
+        $user = $this->find($userId);
+        if (! $user) {
+            return false;
+        }
+
+        if ((int) ($user['is_gold'] ?? 0) === 1) {
+            return true;
+        }
+
+        $soldeActuel = (float) ($user['solde'] ?? 0);
+        if ($soldeActuel < $prixGold) {
+            return false;
+        }
+
+        $db->transStart();
+
+        $this->update($userId, [
+            'solde' => $soldeActuel - $prixGold,
+            'is_gold' => 1,
+        ]);
+
+        $db->transComplete();
+
+        return $db->transStatus() === true;
     }
     public function countCodes()
 {

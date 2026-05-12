@@ -19,10 +19,18 @@ class GoldController extends BaseController
 
     public function activateGold()
     {
-        $userId = (int) (session('user_id') ?? 1);
+        $userId = (int) (session('user_id') ?? 0);
+
+        if ($userId <= 0) {
+            return redirect()->to(base_url('login'))->with('error', 'Veuillez vous connecter.');
+        }
 
         $walletModel = new WalletModel();
-        $walletModel->activerGold($userId);
+        $success = $walletModel->activerGold($userId, WalletModel::GOLD_PRICE);
+
+        if (! $success) {
+            return redirect()->to(base_url('gold'))->with('error', 'Solde insuffisant pour activer Gold.');
+        }
 
         session()->set('is_gold', true);
 
